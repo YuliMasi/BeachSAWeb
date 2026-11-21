@@ -1,0 +1,821 @@
+﻿/* =========================================================
+   Beach.SA - Design System
+   Cada valor se define una sola vez aquí y las clases
+   solo usan estas variables.
+   ========================================================= */
+
+:root {
+    /* ---------- Colores de marca ---------- */
+    --color-primary: #0B2A72; /* Azul principal */
+    --color-secondary: #FBAF17; /* Naranja (botones, títulos footer) */
+    /* ---------- Colores de texto ---------- */
+    --color-text: #3D4F73; /* Labels y texto general */
+    --color-text-placeholder: #94A3BF; /* Placeholder de inputs */
+    --color-text-light: #FFFFFF; /* Texto sobre fondo oscuro */
+    /* ---------- Fondos ---------- */
+    --color-background: #F6F8FC; /* Fondo de la página */
+    --color-surface: #FFFFFF; /* Tarjetas, formularios, inputs */
+    /* ---------- Bordes ---------- */
+    --color-border: #C7D6F2; /* Borde de inputs, línea y copyright del footer */
+    /* ---------- Estados ---------- */
+    --color-danger: #DC2626; /* Eliminar */
+    /* ---------- Tipografía ---------- */
+    --font-family: 'Montserrat', sans-serif;
+    --font-size-label: 12px;
+    --font-size-base: 14px;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    /* ---------- Espaciado ---------- */
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    /* ---------- Botones e inputs ---------- */
+    --radius-pill: 54px;
+    --padding-control-y: 13px;
+    --padding-control-x: 20px;
+    /* ---------- Home ---------- */
+    --color-overlay: rgba(11, 42, 114, 0.35);      /* Capa azul sobre la foto del hero */
+    --color-circle: rgba(255, 255, 255, 0.35);     /* Círculos decorativos del hero */
+    --shadow-card: 0 8px 24px rgba(11, 42, 114, 0.12);
+    --radius-card: 16px;
+    --font-size-hero: 3.5rem;
+    --font-size-hero-mobile: 2.25rem;
+    --font-size-hero-subtitle: 1.25rem;
+    --font-size-stat: 2.5rem;
+    --font-size-section: 1.75rem;
+    --letter-spacing-wide: 0.15em;
+    --hero-height: 440px;
+    --hero-circle-size: 320px;
+    --gallery-height: 240px;
+    --accent-width: 48px;
+    --accent-height: 3px;
+    /* ---------- Paquetes ---------- */
+    --package-img-height: 180px;
+    --font-size-card-title: 1.1rem;
+    --font-size-price: 1.5rem;
+    --space-xs: 4px;
+    --nav-accent-width: 60%;
+    /* ---------- Login y Crear cuenta ---------- */
+    --auth-width: 880px;
+    --auth-radius: 24px;
+    --auth-blur: 6px;
+    --auth-logo-height: 40px;
+    --font-size-auth-title: 1.75rem;
+    --font-size-caption: 1.5rem;
+    --auth-close-size: 32px;
+    --color-backdrop: rgba(11, 42, 114, 0.45);   /* Capa sobre la foto borrosa */
+    --color-caption-fade: rgba(11, 42, 114, 0.85); /* Degradado bajo el texto del carrusel */
+    --auth-dot-width: 8px;
+    --auth-dot-active-width: 20px;
+    /* ---------- Reservaciones y factura ---------- */
+    --avatar-size: 32px;
+    --avatar-size-lg: 88px;
+    --font-size-avatar-lg: 2rem;
+    --profile-width: 320px;
+    --font-size-total: 1.25rem;
+}
+
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+
+/* =========================================================
+   Formularios
+   ========================================================= */
+
+.label-beach {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+}
+
+.input-beach {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: var(--padding-control-y) var(--padding-control-x);
+}
+
+    .input-beach::placeholder {
+        color: var(--color-text-placeholder);
+    }
+
+
+/* =========================================================
+   Botones
+   ========================================================= */
+
+.btn-beach {
+    width: 100%;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-light);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: var(--padding-control-y) var(--padding-control-x);
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+    .btn-beach:hover {
+        color: var(--color-primary);
+    }
+
+.link-beach {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   Navbar
+   ========================================================= */
+
+.navbar-beach {
+    background-color: var(--color-primary);
+    padding: var(--space-md) 0;
+}
+
+.nav-link-beach {
+    color: var(--color-text-light);
+}
+
+    .nav-link-beach:hover {
+        color: var(--color-secondary);
+    }
+
+.btn-outline-beach {
+    display: inline-block;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--radius-pill);
+    padding: var(--space-sm) var(--padding-control-x);
+    text-decoration: none;
+}
+
+    .btn-outline-beach:hover {
+        color: var(--color-primary);
+        background-color: var(--color-secondary);
+    }
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.footer-beach {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+.footer-title {
+    color: var(--color-secondary);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-md);
+}
+
+.footer-text,
+.footer-link {
+    color: var(--color-text-light);
+    text-decoration: none;
+}
+
+    .footer-link:hover {
+        color: var(--color-secondary);
+    }
+
+.footer-line {
+    border-color: var(--color-border);
+    opacity: 1;
+}
+
+.footer-copy {
+    font-size: var(--font-size-label);
+    color: var(--color-border);
+}
+
+
+/* =========================================================
+   Home - Hero
+   ========================================================= */
+
+.hero-beach {
+    min-height: var(--hero-height);
+    display: flex;
+    align-items: center;
+    padding: var(--space-lg) 0 calc(var(--space-lg) * 2);
+    color: var(--color-text-light);
+    background-image: linear-gradient(var(--color-overlay), var(--color-overlay)), url('../img/hero.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-title {
+    font-size: var(--font-size-hero);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: var(--space-md);
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-hero-subtitle);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    margin-bottom: var(--space-lg);
+}
+
+.hero-circle {
+    position: relative;
+    width: var(--hero-circle-size);
+    height: var(--hero-circle-size);
+    border: 1px solid var(--color-circle);
+    border-radius: 50%;
+}
+
+    .hero-circle::after {
+        content: "";
+        position: absolute;
+        inset: 15%;
+        border: 1px solid var(--color-circle);
+        border-radius: 50%;
+    }
+
+.hero-stat {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+    z-index: 1;
+}
+
+.hero-stat-top {
+    top: 15%;
+    left: 5%;
+}
+
+.hero-stat-bottom {
+    bottom: 25%;
+    right: -10%;
+}
+
+.hero-stat-number {
+    font-size: var(--font-size-stat);
+    font-weight: var(--font-weight-bold);
+}
+
+.hero-stat-label {
+    font-size: var(--font-size-label);
+}
+
+
+/* =========================================================
+   Home - Reserva rápida
+   ========================================================= */
+
+.booking-card {
+    position: relative;
+    margin-top: calc(var(--space-lg) * -1.5);
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+
+/* =========================================================
+   Home - Galería
+   ========================================================= */
+
+.section-title {
+    font-size: var(--font-size-section);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+}
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: var(--accent-width);
+        height: var(--accent-height);
+        margin-top: var(--space-sm);
+        background-color: var(--color-secondary);
+    }
+
+.gallery-img {
+    width: 100%;
+    height: var(--gallery-height);
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+
+/* =========================================================
+   Home - Celular
+   ========================================================= */
+
+@media (max-width: 767px) {
+    .hero-title {
+        font-size: var(--font-size-hero-mobile);
+    }
+
+    .hero-beach {
+        padding-bottom: calc(var(--space-lg) * 3);
+    }
+}
+
+
+/* =========================================================
+   Paquetes
+   ========================================================= */
+
+.page-title {
+    font-size: var(--font-size-section);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+}
+
+.package-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-md);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.package-img {
+    width: 100%;
+    height: var(--package-img-height);
+    object-fit: cover;
+    border-radius: var(--radius-card);
+}
+
+.package-title {
+    font-size: var(--font-size-card-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: var(--space-lg) 0 var(--space-md);
+}
+
+.package-price {
+    margin-bottom: var(--space-lg);
+}
+
+.btn-beach-sm {
+    padding: var(--space-sm) var(--padding-control-x);
+}
+
+.empty-beach {
+    color: var(--color-text);
+}
+
+/* Opción del menú de la página actual */
+.nav-link-beach.active {
+    color: var(--color-text-light);
+    font-weight: var(--font-weight-bold);
+}
+
+    .nav-link-beach.active::after {
+        content: "";
+        display: block;
+        width: var(--nav-accent-width);
+        height: var(--accent-height);
+        margin: var(--space-xs) auto 0;
+        background-color: var(--color-secondary);
+        border-radius: var(--accent-height);
+    }
+
+
+/* =========================================================
+   Paquetes - detalles y formularios
+   ========================================================= */
+
+.package-price-number {
+    font-size: var(--font-size-price);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.package-details {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+}
+
+.form-card {
+    padding: var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+/* Botón con borde para fondos claros */
+.btn-outline-beach-dark {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: transparent;
+}
+
+/* Acciones de eliminar */
+.link-danger-beach {
+    color: var(--color-danger);
+}
+
+.btn-danger-beach {
+    background-color: var(--color-danger);
+}
+
+
+/* =========================================================
+   Login y Crear cuenta
+   ========================================================= */
+
+/* Fondo: foto del hotel borrosa, como si fuera una ventana sobre el Home */
+.auth-page {
+    position: relative;
+    background-color: var(--color-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg) var(--space-md);
+}
+
+    .auth-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(var(--color-backdrop), var(--color-backdrop)), url('../img/hero.png');
+        background-size: cover;
+        background-position: center;
+        filter: blur(var(--auth-blur));
+        transform: scale(1.05);
+        z-index: -1;
+    }
+
+.auth-modal {
+    width: 100%;
+    max-width: var(--auth-width);
+    display: flex;
+    background-color: var(--color-surface);
+    border-radius: var(--auth-radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.auth-form {
+    flex: 1;
+    padding: var(--space-lg);
+}
+
+.auth-side {
+    position: relative;
+    flex: 1;
+}
+
+.auth-logo {
+    height: var(--auth-logo-height);
+    margin-bottom: var(--space-lg);
+}
+
+.auth-title {
+    font-size: var(--font-size-auth-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.auth-subtitle {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.auth-text {
+    font-size: var(--font-size-label);
+    color: var(--color-text-placeholder);
+    margin-bottom: var(--space-lg);
+}
+
+.auth-hint {
+    font-size: var(--font-size-label);
+    color: var(--color-text-placeholder);
+}
+
+.auth-switch {
+    text-align: center;
+    font-size: var(--font-size-label);
+    color: var(--color-text-placeholder);
+    margin: var(--space-md) 0 0;
+}
+
+.link-small-beach {
+    font-size: var(--font-size-label);
+}
+
+/* Lado de la foto */
+.auth-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.auth-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: 3;
+    width: var(--auth-close-size);
+    height: var(--auth-close-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-hero-subtitle);
+    color: var(--color-primary);
+    background-color: var(--color-border);
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.auth-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: var(--space-lg) var(--space-lg) calc(var(--space-lg) * 1.5);
+    text-align: center;
+    color: var(--color-text-light);
+    background: linear-gradient(transparent, var(--color-caption-fade));
+}
+
+.auth-caption-title {
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+}
+
+.auth-caption-text {
+    font-size: var(--font-size-label);
+    margin: var(--space-sm) 0 0;
+}
+
+/* Puntos del carrusel */
+.auth-dots {
+    z-index: 3;
+    margin-bottom: var(--space-md);
+}
+
+    .auth-dots [data-bs-target] {
+        width: var(--auth-dot-width);
+        height: var(--auth-dot-width);
+        border: none;
+        border-radius: var(--radius-pill);
+        background-color: var(--color-text-light);
+    }
+
+    .auth-dots .active {
+        width: var(--auth-dot-active-width);
+    }
+
+/* En celular solo se muestra el formulario */
+@media (max-width: 767px) {
+    .auth-side {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   Navbar - perfil
+   ========================================================= */
+
+.avatar-beach {
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    background-color: var(--color-border);
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   Reservaciones - resumen de montos (también en la factura)
+   ========================================================= */
+
+.summary-title {
+    font-size: var(--font-size-card-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-md);
+}
+
+.summary-list {
+    margin-bottom: var(--space-md);
+}
+
+    .summary-list > div {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--space-md);
+        padding: var(--space-xs) 0;
+    }
+
+    .summary-list dt {
+        font-weight: var(--font-weight-regular);
+        color: var(--color-text-placeholder);
+    }
+
+    .summary-list dd {
+        margin: 0;
+        text-align: right;
+        color: var(--color-text);
+    }
+
+    .summary-list .summary-total {
+        border-top: 1px solid var(--color-border);
+        margin-top: var(--space-sm);
+        padding-top: var(--space-sm);
+    }
+
+        .summary-list .summary-total dd {
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+        }
+
+        .summary-list .summary-total + .summary-total {
+            border-top: none;
+            margin-top: 0;
+        }
+
+
+/* =========================================================
+   Mis reservaciones
+   ========================================================= */
+
+.reservation-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.reservation-title {
+    font-size: var(--font-size-card-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.reservation-dates {
+    font-size: var(--font-size-label);
+    color: var(--color-text);
+    margin: 0;
+}
+
+.reservation-total-label {
+    display: block;
+    font-size: var(--font-size-label);
+    color: var(--color-text-placeholder);
+}
+
+.reservation-total {
+    font-size: var(--font-size-total);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+/* Botón deshabilitado: factura pendiente */
+.btn-outline-beach-muted {
+    color: var(--color-text-placeholder);
+    border-color: var(--color-border);
+    cursor: default;
+}
+
+    .btn-outline-beach-muted:hover {
+        color: var(--color-text-placeholder);
+        background-color: transparent;
+    }
+
+
+/* =========================================================
+   Factura (ventana)
+   ========================================================= */
+
+.invoice-card {
+    position: relative;
+    padding: var(--space-lg);
+    border: none;
+    border-radius: var(--radius-card);
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-md);
+    padding-right: var(--space-lg);
+}
+
+.invoice-title {
+    font-size: var(--font-size-auth-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.invoice-date {
+    font-size: var(--font-size-label);
+    color: var(--color-text-placeholder);
+}
+
+.invoice-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(var(--auth-blur));
+}
+
+
+/* =========================================================
+   Perfil (menú desplegable)
+   ========================================================= */
+
+.profile-card {
+    width: var(--profile-width);
+    padding: var(--space-lg);
+    border: none;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.avatar-beach-lg {
+    width: var(--avatar-size-lg);
+    height: var(--avatar-size-lg);
+    font-size: var(--font-size-avatar-lg);
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    margin-bottom: var(--space-md);
+}
+
+.profile-name {
+    font-size: var(--font-size-auth-title);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.profile-email {
+    color: var(--color-text-placeholder);
+    margin-bottom: var(--space-md);
+}
+
+.profile-details {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+}
+
+    .profile-details li {
+        padding: var(--space-xs) 0;
+    }
