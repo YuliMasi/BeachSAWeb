@@ -1,0 +1,68 @@
+﻿@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Package>
+
+@{
+    ViewData["Title"] = "Paquetes";
+}
+
+
+<section class="mt-4 mb-5">
+
+    <!-- Título, buscador y botón nuevo -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <h1 class="page-title mb-0">Paquetes</h1>
+
+        <div class="d-flex flex-wrap gap-2">
+            <form asp-controller="Package" asp-action="Index" method="get" class="d-flex gap-2">
+                <input type="text" name="pName" value="@ViewData["pName"]" class="form-control input-beach" placeholder="Buscar paquete" />
+                <button type="submit" class="btn-outline-beach btn-outline-beach-dark">Buscar</button>
+            </form>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Package" asp-action="Create" class="btn-beach w-auto">Nuevo paquete</a>
+            }
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    else if (Model.Count == 0)
+    {
+        <p class="empty-beach">Por ahora no hay paquetes disponibles.</p>
+    }
+
+    <div class="row g-4">
+        @foreach (var package in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <article class="package-card">
+                    <img src="@Url.Content(PackageInfo.Image(package.PackageType))" alt="@PackageInfo.Name(package.PackageType)" class="package-img" />
+
+                    <h2 class="package-title">@PackageInfo.Name(package.PackageType)</h2>
+                    <p class="package-price">
+                        <span class="package-price-number">$@package.Cost.ToString("N0")</span>
+                        por persona / noche
+                    </p>
+
+                    <ul class="package-details">
+                        <li>Prima: @package.PercentageTotalAmount %</li>
+                        <li>@package.RemainingMonthlyInstallments mensualidades</li>
+                    </ul>
+
+                    <a asp-controller="Reservation" asp-action="Create" asp-route-PackageId="@package.Id" class="btn-beach mt-auto">Reservar</a>
+
+                    <!-- Opciones de mantenimiento: solo el administrador -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a asp-controller="Package" asp-action="Edit" asp-route-id="@package.Id" class="link-beach">Editar</a>
+                            <a asp-controller="Package" asp-action="Delete" asp-route-id="@package.Id" class="link-beach link-danger-beach">Eliminar</a>
+                        </div>
+                    }
+                </article>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,28 @@
+@model BeachSAWeb.Models.Package
+
+@{
+    ViewData["Title"] = "Nuevo paquete";
+}
+
+<section class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-6">
+        <div class="form-card">
+            <h1 class="page-title">Nuevo paquete</h1>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form asp-controller="Package" asp-action="Create" method="post">
+                <partial name="_PackageForm" model="Model" />
+
+                <button type="submit" class="btn-beach">Guardar</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a asp-controller="Package" asp-action="Index" class="link-beach">Volver a paquetes</a>
+            </div>
+        </div>
+    </div>
+</section>

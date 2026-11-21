@@ -1,0 +1,29 @@
+@model BeachSAWeb.Models.Package
+
+@* Campos compartidos por Create y Edit *@
+
+<input type="hidden" asp-for="Id" />
+
+<div class="mb-3">
+    <label asp-for="PackageType" class="label-beach">Tipo de paquete</label>
+    <select asp-for="PackageType" class="form-select input-beach">
+        <option value="All inclusive">Todo incluido</option>
+        <option value="Feeding">Alimentación</option>
+        <option value="Lodging">Hospedaje</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Cost" class="label-beach">Precio por persona por noche ($)</label>
+    <input asp-for="Cost" type="number" min="0" step="0.01" class="form-control input-beach" required />
+</div>
+
+<div class="mb-3">
+    <label asp-for="PercentageTotalAmount" class="label-beach">Prima (%)</label>
+    <input asp-for="PercentageTotalAmount" type="number" min="0" max="100" step="0.01" class="form-control input-beach" required />
+</div>
+
+<div class="mb-4">
+    <label asp-for="RemainingMonthlyInstallments" class="label-beach">Cantidad de mensualidades</label>
+    <input asp-for="RemainingMonthlyInstallments" type="number" min="1" class="form-control input-beach" required />
+</div>
