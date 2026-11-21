@@ -1,0 +1,37 @@
+@* Lado derecho de Login y Crear cuenta: carrusel de fotos con mensaje *@
+@{
+    string title = ViewData["CarouselTitle"] as string;
+    string text = ViewData["CarouselText"] as string;
+}
+
+<div class="auth-side">
+    <a asp-controller="Home" asp-action="Index" class="auth-close" aria-label="Cerrar">&times;</a>
+
+    <div id="authCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner h-100">
+            <div class="carousel-item active h-100">
+                <img src="~/img/gallery-3.png" class="auth-img" alt="Atardecer entre palmeras" />
+            </div>
+            <div class="carousel-item h-100">
+                <img src="~/img/gallery-1.png" class="auth-img" alt="Piscina frente al mar" />
+            </div>
+            <div class="carousel-item h-100">
+                <img src="~/img/gallery-2.png" class="auth-img" alt="Playa de arena blanca" />
+            </div>
+        </div>
+
+        <div class="auth-caption">
+            <h2 class="auth-caption-title">@title</h2>
+            @if (!string.IsNullOrEmpty(text))
+            {
+                <p class="auth-caption-text">@text</p>
+            }
+        </div>
+
+        <div class="carousel-indicators auth-dots">
+            <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Foto 1"></button>
+            <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="1" aria-label="Foto 2"></button>
+            <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="2" aria-label="Foto 3"></button>
+        </div>
+    </div>
+</div>
