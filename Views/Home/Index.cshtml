@@ -1,8 +1,93 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@* =========================================================
+   Hero a todo el ancho (se dibuja en el _Layout, fuera del container)
+   ========================================================= *@
+@section Hero {
+    <section class="hero-beach">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <!-- Texto principal -->
+                <div class="col-lg-7">
+                    <h1 class="hero-title">Vive tu paraíso<br />frente al mar</h1>
+                    <p class="hero-subtitle">Reserva tu paquete en línea</p>
+                    <a asp-controller="Package" asp-action="Index" class="btn-beach w-auto">Ver paquetes</a>
+                </div>
+
+                <!-- Datos destacados -->
+                <div class="col-lg-5 d-none d-lg-flex justify-content-end">
+                    <div class="hero-circle">
+                        <p class="hero-stat hero-stat-top">
+                            <span class="hero-stat-number">3</span>
+                            <span class="hero-stat-label">paquetes</span>
+                        </p>
+                        <p class="hero-stat hero-stat-bottom">
+                            <span class="hero-stat-number">$210</span>
+                            <span class="hero-stat-label">por persona<br />la noche</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario de reserva rápida -->
+    <div class="container">
+        <form class="booking-card" asp-controller="Reservation" asp-action="Create" method="get">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md">
+                    <label class="label-beach" for="PackageType">Paquete</label>
+                    <select class="form-select input-beach" id="PackageType" name="PackageType">
+                        <option>Todo incluido</option>
+                        <option>Alimentación</option>
+                        <option>Hospedaje</option>
+                    </select>
+                </div>
+
+                <div class="col-md">
+                    <label class="label-beach" for="CheckInDate">Fecha de entrada</label>
+                    <input type="date" class="form-control input-beach" id="CheckInDate" name="CheckInDate" />
+                </div>
+
+                <div class="col-md">
+                    <label class="label-beach" for="CheckOutDate">Fecha de salida</label>
+                    <input type="date" class="form-control input-beach" id="CheckOutDate" name="CheckOutDate" />
+                </div>
+
+                <div class="col-md">
+                    <label class="label-beach" for="People">Personas</label>
+                    <input type="number" class="form-control input-beach" id="People" name="People" min="1" placeholder="2" />
+                </div>
+
+                <div class="col-md">
+                    <button type="submit" class="btn-beach">Reservar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+}
+
+@* =========================================================
+   Galería
+   ========================================================= *@
+<section class="mt-5 mb-4">
+    <h2 class="section-title">Galería</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <img src="~/img/gallery-1.png" alt="Piscina frente al mar" class="gallery-img" />
+        </div>
+        <div class="col-md-4">
+            <img src="~/img/gallery-2.png" alt="Playa de arena blanca" class="gallery-img" />
+        </div>
+        <div class="col-md-4">
+            <img src="~/img/gallery-3.png" alt="Atardecer entre palmeras" class="gallery-img" />
+        </div>
+    </div>
+</section>

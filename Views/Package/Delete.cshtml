@@ -1,0 +1,31 @@
+@model BeachSAWeb.Models.Package
+
+@{
+    ViewData["Title"] = "Eliminar paquete";
+}
+
+<section class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-6">
+        <div class="form-card">
+            <h1 class="page-title">Eliminar paquete</h1>
+
+            <p>¿Seguro que desea eliminar este paquete? Esta acción no se puede deshacer.</p>
+
+            <ul class="package-details mb-4">
+                <li><strong>Tipo:</strong> @Model.PackageType</li>
+                <li><strong>Precio:</strong> $@Model.Cost.ToString("N0") por persona / noche</li>
+                <li><strong>Prima:</strong> @Model.PercentageTotalAmount %</li>
+                <li><strong>Mensualidades:</strong> @Model.RemainingMonthlyInstallments</li>
+            </ul>
+
+            <form asp-controller="Package" asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn-beach btn-danger-beach">Eliminar</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a asp-controller="Package" asp-action="Index" class="link-beach">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</section>

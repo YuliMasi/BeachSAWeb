@@ -1,0 +1,95 @@
+@model BeachSAWeb.Models.User
+
+@{
+    ViewData["Title"] = "Crear cuenta";
+    ViewData["CarouselTitle"] = "Tu paraíso te está esperando";
+    ViewData["CarouselText"] = "Crea tu cuenta y reserva en línea.";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="auth-form">
+    <img src="~/img/logo-blue.png" alt="Beach.SA" class="auth-logo" />
+
+    <h1 class="auth-title">Crear cuenta</h1>
+    <p class="auth-text">Únete a Beach.SA y reserva tu paraíso frente al mar.</p>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form id="FormRegister" asp-controller="User" asp-action="Register" method="post">
+
+        @* Tipo de cédula: lo llena la consulta a GoMeta *@
+        <input type="hidden" asp-for="IdType" />
+
+        <div class="mb-3">
+            <label for="cedula" class="label-beach">Cédula</label>
+            <div class="d-flex gap-2">
+                <input id="cedula" name="cedula" class="form-control input-beach" placeholder="123456789" maxlength="12" required />
+                <button type="button" id="btnConsultar" class="btn-outline-beach btn-outline-beach-dark">Consultar</button>
+            </div>
+            <small id="cedulaMsg" class="auth-hint"></small>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FullName" class="label-beach">Nombre completo</label>
+            <input asp-for="FullName" class="form-control input-beach" placeholder="Nombre" required />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PhoneNumber" class="label-beach">Teléfono</label>
+            <input asp-for="PhoneNumber" type="tel" class="form-control input-beach" placeholder="88888888" pattern="[0-9]{8}" title="8 dígitos, sin guion" value="" required />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="label-beach">Correo electrónico</label>
+            <input asp-for="Email" class="form-control input-beach" placeholder="correo@ejemplo.com" required />
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Password" class="label-beach">Contraseña</label>
+            <input asp-for="Password" class="form-control input-beach" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" class="btn-beach">Crear cuenta</button>
+    </form>
+
+    <p class="auth-switch">
+        ¿Ya tiene cuenta? <a asp-controller="User" asp-action="Login" class="link-beach">Inicie sesión</a>
+    </p>
+</div>
+
+<partial name="_AuthCarousel" />
+
+@section Scripts {
+    <script>
+        // Consulta la cédula en GoMeta (por medio del controlador) y llena el nombre
+        document.getElementById('btnConsultar').addEventListener('click', async function () {
+            const cedula = document.getElementById('cedula').value.replace(/\D/g, '');
+            const msg = document.getElementById('cedulaMsg');
+
+            if (cedula.length < 9) {
+                msg.textContent = 'Digite la cédula completa, sin guiones.';
+                return;
+            }
+
+            msg.textContent = 'Consultando...';
+
+            try {
+                const response = await fetch('/User/SearchCedula?cedula=' + cedula);
+                const data = await response.json();
+
+                if (data.found) {
+                    document.getElementById('FullName').value = data.fullName;
+                    document.getElementById('IdType').value = data.idType;
+                    msg.textContent = 'Datos encontrados. Complete el resto del formulario.';
+                } else {
+                    msg.textContent = 'No se encontró la cédula. Puede escribir su nombre a mano.';
+                }
+            } catch {
+                msg.textContent = 'No se pudo consultar la cédula. Puede escribir su nombre a mano.';
+            }
+        });
+    </script>
+}
