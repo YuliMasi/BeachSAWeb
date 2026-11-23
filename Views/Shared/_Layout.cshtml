@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/designSystem.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BeachSAWeb.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/reservation.css" asp-append-version="true" />
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
@@ -35,6 +36,11 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-beach @(ctrl == "Package" ? "active" : "")" asp-controller="Package" asp-action="Index">Paquetes</a>
+                        </li>
+
+                        @* Acceso temporal al panel de administración para pruebas *@
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-beach @(ctrl == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Index">Dashboard</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)

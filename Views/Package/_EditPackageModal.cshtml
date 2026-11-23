@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content beach-modal-content">
+            <div class="modal-body p-3 p-md-4">
+                <h2 class="h3 fw-bold mb-4" style="color: #111827;" id="editPackageModalLabel">Editar Paquete</h2>
+
+                <form asp-controller="Package" asp-action="SaveModal" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="pkgId" name="Id" value="0" />
+
+                    <div class="mb-4">
+                        <label for="pkgName" class="form-label fw-medium">Paquete</label>
+                        <input type="text" class="form-control beach-pill-input" id="pkgName" name="Name" placeholder="Todo incluido" required />
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <label for="pkgPrice" class="form-label fw-medium">Precio por noche</label>
+                            <input type="text" class="form-control beach-pill-input" id="pkgPrice" name="PricePerNightText" placeholder="$000.00" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pkgDeposit" class="form-label fw-medium">Prima</label>
+                            <input type="text" class="form-control beach-pill-input" id="pkgDeposit" name="DepositText" placeholder="00%" required />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn beach-btn-amber px-4 py-2">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

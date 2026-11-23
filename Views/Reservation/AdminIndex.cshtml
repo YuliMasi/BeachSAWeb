@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BeachSAWeb.Models.Reservation>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Reservaciones";
+    var reservations = Model?.ToList() ?? new List<BeachSAWeb.Models.Reservation>();
+}
+
+<div class="table-responsive">
+    <table class="table beach-admin-table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Paquete</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!reservations.Any())
+            {
+                <tr>
+                    <td>R-0001</td>
+                    <td>Nombre Apellido</td>
+                    <td>Todo incluido</td>
+                    <td>$4,576.50</td>
+                    <td>Confirmada</td>
+                </tr>
+                <tr>
+                    <td>R-0002</td>
+                    <td>Nombre Apellido</td>
+                    <td>Hospedaje</td>
+                    <td>$1,281.42</td>
+                    <td>Confirmada</td>
+                </tr>
+                <tr>
+                    <td>R-0003</td>
+                    <td>Nombre Apellido</td>
+                    <td>Alimentación</td>
+                    <td>$2,113.10</td>
+                    <td>Pendiente</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in reservations)
+                {
+                    <tr>
+                        <td>R-@item.Id.ToString("D4")</td>
+                        <td>@(item.User?.FullName ?? $"Cliente #{item.UserId}")</td>
+                        @* <td>@(item.Package?.Name ?? $"Paquete #{item.PackageId}")</td> *@
+                        @* <td>$@((item.Invoice?.TotalUsd ?? 0m).ToString("N2"))</td> *@
+                        @* <td>@(item.Status ?? "Confirmada")</td> *@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

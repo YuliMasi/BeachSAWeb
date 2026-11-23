@@ -81,11 +81,29 @@
    Base
    ========================================================= */
 
+/* =========================================================
+   Base
+   ========================================================= */
+
+html,
 body {
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     color: var(--color-text);
     background-color: var(--color-background);
+}
+
+button,
+input,
+select,
+textarea,
+.btn,
+.form-control,
+.form-select,
+.table,
+.modal,
+.dropdown-menu {
+    font-family: var(--font-family);
 }
 
 

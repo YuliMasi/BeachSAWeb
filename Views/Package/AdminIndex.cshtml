@@ -1,0 +1,103 @@
+﻿@using BeachSAWeb.Services
+@model IEnumerable<BeachSAWeb.Models.Package>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Paquetes";
+    var packages = Model?.ToList() ?? new List<BeachSAWeb.Models.Package>();
+}
+
+@section TopActions {
+    <button type="button" class="btn beach-btn-amber" data-bs-toggle="modal" data-bs-target="#editPackageModal" onclick="clearPackageModal()">
+        + Nuevo paquete
+    </button>
+}
+
+<div class="table-responsive">
+    <table class="table beach-admin-table">
+        <thead>
+            <tr>
+                <th>Paquete</th>
+                <th>Precio por noche</th>
+                <th>Prima</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!packages.Any())
+            {
+                <tr>
+                    <td>Todo incluido</td>
+                    <td>$450.00</td>
+                    <td>45%</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
+                           onclick="fillPackageModal(1, 'Todo incluido', 450.00, 45)">Editar</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Eliminar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Alimentación</td>
+                    <td>$275.00</td>
+                    <td>35%</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
+                           onclick="fillPackageModal(2, 'Alimentación', 275.00, 35)">Editar</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Eliminar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hospedaje</td>
+                    <td>$210.00</td>
+                    <td>15%</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
+                           onclick="fillPackageModal(3, 'Hospedaje', 210.00, 15)">Editar</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Eliminar</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var pkg in packages)
+                {
+                    var pkgName = PackageInfo.Name(pkg.PackageType);
+                    <tr>
+                        <td>@pkgName</td>
+                        <td>$@pkg.Cost.ToString("N2")</td>
+                        <td>@pkg.PercentageTotalAmount%</td>
+                        <td>
+                            <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
+                               onclick="fillPackageModal(@pkg.Id, '@pkgName', @pkg.Cost.ToString(System.Globalization.CultureInfo.InvariantCulture), @pkg.PercentageTotalAmount)">Editar</a>
+                            <span class="mx-1 text-muted">·</span>
+                            <a asp-controller="Package" asp-action="Delete" asp-route-id="@pkg.Id" class="beach-link-action">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@await Html.PartialAsync("_EditPackageModal")
+
+@section Scripts {
+    <script>
+        function fillPackageModal(id, name, price, deposit) {
+            document.getElementById("pkgId").value = id;
+            document.getElementById("pkgName").value = name;
+            document.getElementById("pkgPrice").value = "$" + Number(price).toFixed(2);
+            document.getElementById("pkgDeposit").value = deposit + "%";
+        }
+
+        function clearPackageModal() {
+            document.getElementById("pkgId").value = 0;
+            document.getElementById("pkgName").value = "";
+            document.getElementById("pkgPrice").value = "$000.00";
+            document.getElementById("pkgDeposit").value = "00%";
+        }
+    </script>
+}

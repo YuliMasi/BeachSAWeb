@@ -1,0 +1,99 @@
+﻿@model IEnumerable<BeachSAWeb.Models.Invoice>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Facturación";
+    var invoices = Model?.ToList() ?? new List<BeachSAWeb.Models.Invoice>();
+}
+
+<div class="table-responsive">
+    <table class="table beach-admin-table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Total USD</th>
+                <th>Total CRC</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!invoices.Any())
+            {
+                <tr>
+                    <td>000123</td>
+                    <td>Nombre Apellido</td>
+                    <td>$4,576.50</td>
+                    <td>CRC --</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
+                           onclick="openInvoiceModal('000123', 'dd/mm/aaaa', 'Nombre Apellido', 'Todo incluido', 5, 'Efectivo', '-$450.00', '$526.50', '$4,576.50', 'CRC --')">Ver</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Reenviar PDF</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>000122</td>
+                    <td>Nombre Apellido</td>
+                    <td>$1,281.42</td>
+                    <td>CRC --</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
+                           onclick="openInvoiceModal('000122', 'dd/mm/aaaa', 'Nombre Apellido', 'Hospedaje', 3, 'Tarjeta', '$0.00', '$147.42', '$1,281.42', 'CRC --')">Ver</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Reenviar PDF</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>000121</td>
+                    <td>Nombre Apellido</td>
+                    <td>$2,113.10</td>
+                    <td>CRC --</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
+                           onclick="openInvoiceModal('000121', 'dd/mm/aaaa', 'Nombre Apellido', 'Alimentación', 4, 'Efectivo', '-$110.00', '$243.10', '$2,113.10', 'CRC --')">Ver</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a href="#" class="beach-link-action">Reenviar PDF</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var inv in invoices)
+                {
+                    <tr>
+                        @* <td>@inv.Number.ToString("D6")</td>
+                        <td>@(inv.ClientName ?? "Nombre Apellido")</td>
+                        <td>$@inv.TotalUsd.ToString("N2")</td>
+                        <td>@(inv.TotalCrc.HasValue ? $"₡{inv.TotalCrc.Value:N2}" : "CRC --")</td>
+                        <td>
+                            <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
+                               onclick="openInvoiceModal('@inv.Number.ToString("D6")', '@inv.IssueDate.ToString("dd/MM/yyyy")', '@inv.ClientName', '@inv.PackageName', @inv.Nights, '@inv.PaymentMethod', '-$@inv.DiscountAmount.ToString("N2")', '$@inv.IvaAmount.ToString("N2")', '$@inv.TotalUsd.ToString("N2")', '@(inv.TotalCrc.HasValue ? $"₡{inv.TotalCrc.Value:N2}" : "CRC --")')">Ver</a>
+                            <span class="mx-1 text-muted">·</span>
+                            <a asp-controller="Invoice" asp-action="ResendPdf" asp-route-id="@inv.Id" class="beach-link-action">Reenviar PDF</a>
+                        </td> *@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@await Html.PartialAsync("_ViewInvoiceModal")
+
+@section Scripts {
+    <script>
+        function openInvoiceModal(number, date, client, pkg, nights, payment, discount, iva, totalUsd, totalCrc) {
+            document.getElementById("invNumber").textContent = "Factura N° " + number;
+            document.getElementById("invDate").textContent = date;
+            document.getElementById("invClient").textContent = client;
+            document.getElementById("invPackage").textContent = pkg;
+            document.getElementById("invNights").textContent = nights;
+            document.getElementById("invPayment").textContent = payment;
+            document.getElementById("invDiscount").textContent = discount;
+            document.getElementById("invIva").textContent = iva;
+            document.getElementById("invTotalUsd").textContent = totalUsd;
+            document.getElementById("invTotalCrc").textContent = totalCrc;
+        }
+    </script>
+}

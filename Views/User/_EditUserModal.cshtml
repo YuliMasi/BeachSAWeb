@@ -1,0 +1,41 @@
+﻿<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content beach-modal-content">
+            <div class="modal-body p-3 p-md-4">
+                <h2 class="h3 fw-bold mb-4" style="color: #0c2870;" id="editUserModalLabel">Editar usuario</h2>
+
+                <form asp-controller="User" asp-action="EditModal" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="editUserId" name="Id" value="0" />
+
+                    <div class="mb-3">
+                        <label for="editIdNumber" class="form-label fw-medium">Cédula</label>
+                        <input type="text" class="form-control beach-pill-input" id="editIdNumber" name="Identification" placeholder="1-2345-6789" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label fw-medium">Nombre completo</label>
+                        <input type="text" class="form-control beach-pill-input" id="editFullName" name="FullName" placeholder="Nombre" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label fw-medium">Teléfono</label>
+                        <input type="text" class="form-control beach-pill-input" id="editPhone" name="Phone" placeholder="8888-8888" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label fw-medium">Correo electrónico</label>
+                        <input type="email" class="form-control beach-pill-input" id="editEmail" name="Email" placeholder="correo@ejemplo.com" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="editPassword" class="form-label fw-medium">Contraseña</label>
+                        <input type="password" class="form-control beach-pill-input" id="editPassword" name="Password" placeholder="••••••••" />
+                    </div>
+
+                    <button type="submit" class="btn beach-btn-amber w-100 py-2">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
