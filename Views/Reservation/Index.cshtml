@@ -1,101 +1,61 @@
-@model IEnumerable<BeachSAWeb.Models.Reservation>
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Reservation>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Mis reservaciones";
 }
 
-<h1>Index</h1>
+<section class="mt-4 mb-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <h1 class="page-title mb-0">Mis reservaciones</h1>
+        <a asp-action="Create" class="btn-beach w-auto">Nueva reservación</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PackageId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccommodationDays)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IVA)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.People)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckInDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckOutDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Package)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Invoice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PackageId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.AccommodationDays)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.IVA)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.People)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CheckInDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CheckOutDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Package)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Invoice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <p class="empty-beach">Todavía no tiene reservaciones.</p>
+    }
+
+    <div class="d-flex flex-column gap-3">
+        @foreach (var item in Model)
+        {
+            <article class="reservation-row">
+                <div>
+                    <h2 class="reservation-title">@PackageInfo.Name(item.Package?.PackageType ?? $"Paquete #{item.PackageId}")</h2>
+                    <p class="reservation-dates">
+                        @item.CheckInDate.ToString("dd/MM/yyyy") – @item.CheckOutDate.ToString("dd/MM/yyyy")
+                        · @item.AccommodationDays noches · @item.GuestQuantity personas · @ReservationInfo.PaymentName(item.PaymentMethod)
+                    </p>
+                </div>
+
+                <div class="text-md-end">
+                    <span class="reservation-total-label">Total</span>
+                    <span class="reservation-total">$@((item.Invoice?.TotalUsd ?? 0).ToString("N2"))</span>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    @if (item.Invoice != null)
+                    {
+                        <a asp-controller="Invoice" asp-action="Details" asp-route-reservationId="@item.Id" class="btn-outline-beach btn-outline-beach-dark">Ver factura</a>
+                    }
+                    else
+                    {
+                        <span class="btn-outline-beach btn-outline-beach-muted">Factura pendiente</span>
+                    }
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="link-beach">Modificar</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="link-beach link-danger-beach">Cancelar</a>
+                </div>
+            </article>
+        }
+    </div>
+</section>

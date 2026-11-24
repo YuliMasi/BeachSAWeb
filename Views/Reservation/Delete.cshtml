@@ -1,0 +1,28 @@
+@using BeachSAWeb.Services
+@model BeachSAWeb.Models.Reservation
+
+@{
+    ViewData["Title"] = "Cancelar reservación";
+}
+
+<section class="mt-4 mb-5">
+    <div class="form-card mx-auto">
+        <h1 class="page-title">Cancelar reservación</h1>
+        <p>¿Seguro que desea cancelar esta reservación? También se eliminará su factura.</p>
+
+        <dl class="summary-list">
+            <div><dt>Reservación</dt><dd>R-@Model.Id.ToString("D4")</dd></div>
+            <div><dt>Paquete</dt><dd>@PackageInfo.Name(Model.Package?.PackageType ?? $"Paquete #{Model.PackageId}")</dd></div>
+            <div><dt>Entrada</dt><dd>@Model.CheckInDate.ToString("dd/MM/yyyy")</dd></div>
+            <div><dt>Salida</dt><dd>@Model.CheckOutDate.ToString("dd/MM/yyyy")</dd></div>
+            <div><dt>Personas</dt><dd>@Model.GuestQuantity</dd></div>
+            <div><dt>Forma de pago</dt><dd>@ReservationInfo.PaymentName(Model.PaymentMethod)</dd></div>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="d-flex gap-3 align-items-center">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn-danger-beach">Sí, cancelar</button>
+            <a asp-action="Index" class="link-beach">Volver</a>
+        </form>
+    </div>
+</section>
