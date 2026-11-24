@@ -8,18 +8,29 @@ using System.Net.Http.Headers;
 
 namespace BeachSAWeb.Controllers
 {
+    /// <summary>
+    /// Controla la consulta y el mantenimiento de paquetes.
+    /// </summary>
     [Authorize]
     public class PackageController : Controller
     {
         private readonly ApiService _apiService = null;
         private readonly HttpClient _httpClient = null;
 
+        /// <summary>
+        /// Inicializa el cliente HTTP que consume la API.
+        /// </summary>
         public PackageController()
         {
             this._apiService = new ApiService();
             this._httpClient = this._apiService.ApiBeachStart();
         }
 
+        /// <summary>
+        /// Muestra los paquetes; al administrador le muestra la tabla de mantenimiento.
+        /// </summary>
+        /// <param name="pName">Texto para buscar paquetes por su tipo.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Index(string pName)
         {
@@ -68,6 +79,11 @@ namespace BeachSAWeb.Controllers
             return View(packages);
         }
 
+        /// <summary>
+        /// Crea o modifica un paquete desde la ventana del panel.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -109,6 +125,10 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Muestra el formulario para crear un paquete.
+        /// </summary>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public IActionResult Create()
         {
@@ -117,6 +137,11 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Registra un paquete nuevo en la API.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind] Package temp)
@@ -147,6 +172,11 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Muestra el formulario para modificar un paquete.
+        /// </summary>
+        /// <param name="id">Identificador del paquete.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -168,6 +198,11 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Guarda los cambios de un paquete en la API.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind] Package temp)
@@ -196,6 +231,11 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Muestra la confirmación para eliminar un paquete.
+        /// </summary>
+        /// <param name="id">Identificador del paquete.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -217,6 +257,11 @@ namespace BeachSAWeb.Controllers
 
         [Authorize(Roles = "Admin")]
 
+        /// <summary>
+        /// Elimina un paquete en la API.
+        /// </summary>
+        /// <param name="id">Identificador del paquete.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -241,6 +286,11 @@ namespace BeachSAWeb.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Busca un paquete por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador del paquete.</param>
+        /// <returns>El paquete encontrado, o null si no existe.</returns>
         private async Task<Package> SearchPackage(int id)
         {
             if (id <= 0)
@@ -259,6 +309,10 @@ namespace BeachSAWeb.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Arma el encabezado de autorización con el token guardado en la sesión.
+        /// </summary>
+        /// <returns>El encabezado Bearer, o null si no hay token.</returns>
         private AuthenticationHeaderValue AuthorizationValue()
         {
             string varToken = HttpContext.Session.GetString("token");
@@ -273,6 +327,10 @@ namespace BeachSAWeb.Controllers
             return authentication;
         }
 
+        /// <summary>
+        /// Agrega el token de la sesión a las peticiones a la API.
+        /// </summary>
+        /// <returns>true si había token; false si la sesión expiró.</returns>
         private bool SetToken()
         {
             this._httpClient.DefaultRequestHeaders.Authorization = this.AuthorizationValue();

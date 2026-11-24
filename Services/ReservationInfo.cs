@@ -3,8 +3,16 @@ using Newtonsoft.Json.Linq;
 
 namespace BeachSAWeb.Services
 {
+    /// <summary>
+    /// Datos auxiliares para los formularios de reservación.
+    /// </summary>
     public static class ReservationInfo
     {
+        /// <summary>
+        /// Arma la lista de formas de pago para el formulario.
+        /// </summary>
+        /// <param name="selectedValue">Forma de pago que debe aparecer seleccionada.</param>
+        /// <returns>Las opciones Efectivo, Tarjeta y Cheque.</returns>
         public static List<SelectListItem> PaymentMethods(string? selectedValue = null)
         {
             string[] methods = { "Efectivo", "Tarjeta", "Cheque" };
@@ -17,6 +25,11 @@ namespace BeachSAWeb.Services
             }).ToList();
         }
 
+        /// <summary>
+        /// Normaliza el nombre de una forma de pago para mostrarlo.
+        /// </summary>
+        /// <param name="method">Forma de pago guardada en la reservación.</param>
+        /// <returns>El nombre de la forma de pago con mayúscula inicial.</returns>
         public static string PaymentName(string? method)
         {
             switch (method?.Trim().ToLower())
@@ -28,6 +41,10 @@ namespace BeachSAWeb.Services
             }
         }
 
+        /// <summary>
+        /// Consulta el tipo de cambio de venta del BCCR mediante GoMeta.
+        /// </summary>
+        /// <returns>El tipo de cambio, o 0 si no se pudo consultar.</returns>
         public static async Task<double> ExchangeRate()
         {
             try

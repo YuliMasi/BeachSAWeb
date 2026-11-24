@@ -8,18 +8,29 @@ using System.Net.Http.Headers;
 
 namespace BeachSAWeb.Controllers
 {
+    /// <summary>
+    /// Controla el registro, la consulta, la modificación y la cancelación de reservaciones.
+    /// </summary>
     [Authorize]
     public class ReservationController : Controller
     {
         private readonly ApiService _apiService = null;
         private readonly HttpClient _httpClient = null;
 
+        /// <summary>
+        /// Inicializa el cliente HTTP que consume la API.
+        /// </summary>
         public ReservationController()
         {
             this._apiService = new ApiService();
             this._httpClient = this._apiService.ApiBeachStart();
         }
 
+        /// <summary>
+        /// Muestra las reservaciones: las propias para el cliente y todas para el administrador.
+        /// </summary>
+        /// <param name="value">Texto o número por el cual filtrar; si viene vacío se muestran todos.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Index(string value)
         {
@@ -72,6 +83,15 @@ namespace BeachSAWeb.Controllers
             return View(reservations);
         }
 
+        /// <summary>
+        /// Muestra el formulario de reservación, con los datos de la reserva rápida si vienen.
+        /// </summary>
+        /// <param name="packageId">Paquete preseleccionado en el formulario.</param>
+        /// <param name="packageType">Tipo de paquete preseleccionado en el formulario.</param>
+        /// <param name="checkInDate">Fecha de entrada preseleccionada.</param>
+        /// <param name="checkOutDate">Fecha de salida preseleccionada.</param>
+        /// <param name="guestQuantity">Cantidad de personas preseleccionada.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Create(int packageId, string packageType, DateTime? checkInDate, DateTime? checkOutDate, int guestQuantity)
         {
@@ -101,6 +121,11 @@ namespace BeachSAWeb.Controllers
             return View(temp);
         }
 
+        /// <summary>
+        /// Registra la reservación en la API y abre su factura.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind] Reservation temp)
@@ -159,6 +184,11 @@ namespace BeachSAWeb.Controllers
             return View(temp);
         }
 
+        /// <summary>
+        /// Muestra el formulario para modificar una reservación.
+        /// </summary>
+        /// <param name="id">Identificador de la reservación.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -182,6 +212,11 @@ namespace BeachSAWeb.Controllers
             return View(temp);
         }
 
+        /// <summary>
+        /// Guarda los cambios de una reservación; la API recalcula la factura.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind] Reservation temp)
@@ -227,6 +262,11 @@ namespace BeachSAWeb.Controllers
             return View(temp);
         }
 
+        /// <summary>
+        /// Muestra la confirmación para cancelar una reservación.
+        /// </summary>
+        /// <param name="id">Identificador de la reservación.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -248,6 +288,11 @@ namespace BeachSAWeb.Controllers
             return View(temp);
         }
 
+        /// <summary>
+        /// Cancela la reservación y su factura en la API.
+        /// </summary>
+        /// <param name="id">Identificador de la reservación.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -272,6 +317,11 @@ namespace BeachSAWeb.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Busca una reservación por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador de la reservación.</param>
+        /// <returns>La reservación encontrada, o null si no existe o no es del usuario.</returns>
         private async Task<Reservation> SearchReservation(int id)
         {
             if (id <= 0)
@@ -294,6 +344,10 @@ namespace BeachSAWeb.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Consulta los paquetes disponibles en la API.
+        /// </summary>
+        /// <returns>La lista de paquetes, o una lista vacía si la API falla.</returns>
         private async Task<List<Package>> LoadPackages()
         {
             HttpResponseMessage response = await _httpClient.GetAsync("/api/packages/List");
@@ -307,12 +361,20 @@ namespace BeachSAWeb.Controllers
             return new List<Package>();
         }
 
+        /// <summary>
+        /// Carga los paquetes y el tipo de cambio que usa el formulario.
+        /// </summary>
+        /// <param name="packages">Paquetes disponibles para el formulario.</param>
         private async Task FillFormData(List<Package> packages)
         {
             ViewBag.Packages = packages;
             ViewBag.ExchangeRate = await ReservationInfo.ExchangeRate();
         }
 
+        /// <summary>
+        /// Completa cada reservación con su paquete, su factura y, para el administrador, su cliente.
+        /// </summary>
+        /// <param name="reservations">Reservaciones a completar con su paquete, factura y cliente.</param>
         private async Task FillReservationData(List<Reservation> reservations)
         {
             List<Package> packages = await this.LoadPackages();
@@ -344,6 +406,10 @@ namespace BeachSAWeb.Controllers
             }
         }
 
+        /// <summary>
+        /// Arma el encabezado de autorización con el token guardado en la sesión.
+        /// </summary>
+        /// <returns>El encabezado Bearer, o null si no hay token.</returns>
         private AuthenticationHeaderValue AuthorizationValue()
         {
             string varToken = HttpContext.Session.GetString("token");
@@ -358,6 +424,10 @@ namespace BeachSAWeb.Controllers
             return authentication;
         }
 
+        /// <summary>
+        /// Agrega el token de la sesión a las peticiones a la API.
+        /// </summary>
+        /// <returns>true si había token; false si la sesión expiró.</returns>
         private bool SetToken()
         {
             this._httpClient.DefaultRequestHeaders.Authorization = this.AuthorizationValue();
