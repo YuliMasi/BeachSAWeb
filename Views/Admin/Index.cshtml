@@ -1,13 +1,13 @@
-﻿@model IEnumerable<BeachSAWeb.Models.Reservation>
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Reservation>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Dashboard";
 
-    int totalReservations = ViewBag.TotalReservations ?? 128;
-    decimal totalSalesUsd = ViewBag.TotalSalesUsd ?? 0m;
-    int totalClients = ViewBag.TotalClients ?? 342;
-    var recentReservations = Model?.ToList() ?? new List<BeachSAWeb.Models.Reservation>();
+    int totalReservations = ViewBag.TotalReservations ?? 0;
+    double totalSalesUsd = ViewBag.TotalSalesUsd ?? 0d;
+    int totalClients = ViewBag.TotalClients ?? 0;
 }
 
 <div class="row g-4 mb-5">
@@ -38,38 +38,18 @@
             </tr>
         </thead>
         <tbody>
-            @if (!recentReservations.Any())
+            @if (Model.Count == 0)
             {
-                <tr>
-                    <td>R-0003</td>
-                    <td>Nombre Apellido</td>
-                    <td>Todo incluido</td>
-                    <td>$4,576.50</td>
-                </tr>
-                <tr>
-                    <td>R-0002</td>
-                    <td>Nombre Apellido</td>
-                    <td>Hospedaje</td>
-                    <td>$1,281.42</td>
-                </tr>
-                <tr>
-                    <td>R-0001</td>
-                    <td>Nombre Apellido</td>
-                    <td>Alimentación</td>
-                    <td>$2,113.10</td>
-                </tr>
+                <tr><td colspan="4" class="text-muted">No hay reservaciones registradas.</td></tr>
             }
-            else
+            @foreach (var item in Model)
             {
-                @foreach (var item in recentReservations)
-                {
-                    <tr>
-                        <td>R-@item.Id.ToString("D4")</td>
-                        <td>@(item.User?.FullName ?? $"Cliente #{item.UserId}")</td>
-                        @* <td>@(item.Package?.Name ?? $"Paquete #{item.PackageId}")</td>
-                        <td>$@((item.Invoice?.TotalUsd ?? 0m).ToString("N2"))</td> *@
-                    </tr>
-                }
+                <tr>
+                    <td>R-@item.Id.ToString("D4")</td>
+                    <td>@(item.User?.FullName ?? $"Cliente #{item.UserId}")</td>
+                    <td>@PackageInfo.Name(item.Package?.PackageType ?? $"Paquete #{item.PackageId}")</td>
+                    <td>$@((item.Invoice?.TotalUsd ?? 0).ToString("N2"))</td>
+                </tr>
             }
         </tbody>
     </table>

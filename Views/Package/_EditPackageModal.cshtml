@@ -1,28 +1,37 @@
-﻿<div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true">
+<div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content beach-modal-content">
             <div class="modal-body p-3 p-md-4">
-                <h2 class="h3 fw-bold mb-4" style="color: #111827;" id="editPackageModalLabel">Editar Paquete</h2>
+                <h2 class="h3 fw-bold mb-4" style="color: #111827;" id="editPackageModalLabel">Editar paquete</h2>
 
                 <form asp-controller="Package" asp-action="SaveModal" method="post">
-                    @Html.AntiForgeryToken()
                     <input type="hidden" id="pkgId" name="Id" value="0" />
 
                     <div class="mb-4">
-                        <label for="pkgName" class="form-label fw-medium">Paquete</label>
-                        <input type="text" class="form-control beach-pill-input" id="pkgName" name="Name" placeholder="Todo incluido" required />
+                        <label for="pkgType" class="form-label fw-medium">Paquete</label>
+                        <select class="form-select beach-pill-input" id="pkgType" name="PackageType" onchange="setPackageDefaults()" required>
+                            <option value="Todo incluido">Todo incluido</option>
+                            <option value="Alimentación">Alimentación</option>
+                            <option value="Hospedaje">Hospedaje</option>
+                        </select>
                     </div>
 
                     <div class="row g-3 mb-4">
-                        <div class="col-md-8">
-                            <label for="pkgPrice" class="form-label fw-medium">Precio por noche</label>
-                            <input type="text" class="form-control beach-pill-input" id="pkgPrice" name="PricePerNightText" placeholder="$000.00" required />
+                        <div class="col-md-4">
+                            <label for="pkgCost" class="form-label fw-medium">Precio por noche ($)</label>
+                            <input type="number" min="0" step="0.01" class="form-control beach-pill-input" id="pkgCost" readonly name="Cost" required />
                         </div>
                         <div class="col-md-4">
-                            <label for="pkgDeposit" class="form-label fw-medium">Prima</label>
-                            <input type="text" class="form-control beach-pill-input" id="pkgDeposit" name="DepositText" placeholder="00%" required />
+                            <label for="pkgPrima" class="form-label fw-medium">Prima (%)</label>
+                            <input type="number" min="0" max="100" step="0.01" class="form-control beach-pill-input" id="pkgPrima" readonly name="PercentageTotalAmount" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pkgMonths" class="form-label fw-medium">Mensualidades</label>
+                            <input type="number" min="1" class="form-control beach-pill-input" id="pkgMonths" readonly name="RemainingMonthlyInstallments" required />
                         </div>
                     </div>
+
+                    <p class="text-muted small mb-4">El precio, la prima y las mensualidades los define la política del hotel para cada tipo de paquete.</p>
 
                     <button type="submit" class="btn beach-btn-amber px-4 py-2">Guardar</button>
                 </form>

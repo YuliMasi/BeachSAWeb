@@ -36,11 +36,11 @@ namespace BeachSAWeb.Controllers
 
                 if (string.IsNullOrEmpty(pName))
                 {
-                    response = await _httpClient.GetAsync("/api/Packages/List");
+                    response = await _httpClient.GetAsync("/api/packages/List");
                 }
                 else
                 {
-                    response = await _httpClient.GetAsync($"/api/Packages/SearchDescrip?value={Uri.EscapeDataString(pName)}");
+                    response = await _httpClient.GetAsync($"/api/packages/SearchDescrip?packageType={Uri.EscapeDataString(pName)}");
                 }
 
                 if (response.IsSuccessStatusCode)
@@ -60,7 +60,51 @@ namespace BeachSAWeb.Controllers
 
             ViewData["pName"] = pName;
 
+            if (User.IsInRole("Admin"))
+            {
+                return View("AdminIndex", packages);
+            }
+
             return View(packages);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveModal([Bind] Package temp)
+        {
+            if (temp == null)
+            {
+                TempData["ErrorMessage"] = "No se permiten datos en blanco";
+                return RedirectToAction("Index");
+            }
+
+            if (this.SetToken() == false)
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            HttpResponseMessage response = null;
+
+            if (temp.Id > 0)
+            {
+                response = await _httpClient.PutAsJsonAsync<Package>("/api/packages/Update", temp);
+            }
+            else
+            {
+                response = await _httpClient.PostAsJsonAsync<Package>("/api/packages/Create", temp);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = response.Content.ReadAsStringAsync().Result;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = $"Error al guardar el paquete: {response.Content.ReadAsStringAsync().Result}";
+            }
+
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admin")]
@@ -90,7 +134,7 @@ namespace BeachSAWeb.Controllers
 
             temp.Id = 0;
 
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Package>("/api/Packages/Create", temp);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Package>("/api/packages/Create", temp);
 
             if (response.IsSuccessStatusCode)
             {
@@ -139,7 +183,7 @@ namespace BeachSAWeb.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            HttpResponseMessage response = await _httpClient.PutAsJsonAsync<Package>("/api/Packages/Edit", temp);
+            HttpResponseMessage response = await _httpClient.PutAsJsonAsync<Package>("/api/packages/Update", temp);
 
             if (response.IsSuccessStatusCode)
             {
@@ -183,9 +227,13 @@ namespace BeachSAWeb.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/Packages/Delete?id={id}");
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/packages/Delete?id={id}");
 
-            if (!response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = response.Content.ReadAsStringAsync().Result;
+            }
+            else
             {
                 TempData["ErrorMessage"] = $"Error al eliminar el paquete: {response.Content.ReadAsStringAsync().Result}";
             }
@@ -200,7 +248,7 @@ namespace BeachSAWeb.Controllers
                 return null;
             }
 
-            HttpResponseMessage response = await _httpClient.GetAsync($"/api/Packages/Search?id={id}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"/api/packages/SearchById?id={id}");
 
             if (response.IsSuccessStatusCode)
             {

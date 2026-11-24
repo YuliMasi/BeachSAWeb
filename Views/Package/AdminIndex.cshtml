@@ -1,16 +1,22 @@
-﻿@using BeachSAWeb.Services
-@model IEnumerable<BeachSAWeb.Models.Package>
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Package>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Paquetes";
-    var packages = Model?.ToList() ?? new List<BeachSAWeb.Models.Package>();
+    var culture = System.Globalization.CultureInfo.InvariantCulture;
 }
 
 @section TopActions {
-    <button type="button" class="btn beach-btn-amber" data-bs-toggle="modal" data-bs-target="#editPackageModal" onclick="clearPackageModal()">
-        + Nuevo paquete
-    </button>
+    <div class="d-flex gap-2">
+        <form asp-action="Index" method="get" class="d-flex gap-2">
+            <input type="text" name="pName" value="@ViewData["pName"]" class="form-control beach-pill-input" placeholder="Buscar paquete" />
+            <button type="submit" class="btn beach-btn-outline-navy">Buscar</button>
+        </form>
+        <button type="button" class="btn beach-btn-amber" data-bs-toggle="modal" data-bs-target="#editPackageModal" onclick="clearPackageModal()">
+            + Nuevo paquete
+        </button>
+    </div>
 }
 
 <div class="table-responsive">
@@ -20,63 +26,29 @@
                 <th>Paquete</th>
                 <th>Precio por noche</th>
                 <th>Prima</th>
+                <th>Mensualidades</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @if (!packages.Any())
+            @if (Model.Count == 0)
             {
-                <tr>
-                    <td>Todo incluido</td>
-                    <td>$450.00</td>
-                    <td>45%</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
-                           onclick="fillPackageModal(1, 'Todo incluido', 450.00, 45)">Editar</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Eliminar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Alimentación</td>
-                    <td>$275.00</td>
-                    <td>35%</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
-                           onclick="fillPackageModal(2, 'Alimentación', 275.00, 35)">Editar</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Eliminar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hospedaje</td>
-                    <td>$210.00</td>
-                    <td>15%</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
-                           onclick="fillPackageModal(3, 'Hospedaje', 210.00, 15)">Editar</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Eliminar</a>
-                    </td>
-                </tr>
+                <tr><td colspan="5" class="text-muted">No hay paquetes registrados.</td></tr>
             }
-            else
+            @foreach (var pkg in Model)
             {
-                @foreach (var pkg in packages)
-                {
-                    var pkgName = PackageInfo.Name(pkg.PackageType);
-                    <tr>
-                        <td>@pkgName</td>
-                        <td>$@pkg.Cost.ToString("N2")</td>
-                        <td>@pkg.PercentageTotalAmount%</td>
-                        <td>
-                            <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
-                               onclick="fillPackageModal(@pkg.Id, '@pkgName', @pkg.Cost.ToString(System.Globalization.CultureInfo.InvariantCulture), @pkg.PercentageTotalAmount)">Editar</a>
-                            <span class="mx-1 text-muted">·</span>
-                            <a asp-controller="Package" asp-action="Delete" asp-route-id="@pkg.Id" class="beach-link-action">Eliminar</a>
-                        </td>
-                    </tr>
-                }
+                <tr>
+                    <td>@PackageInfo.Name(pkg.PackageType)</td>
+                    <td>$@pkg.Cost.ToString("N2")</td>
+                    <td>@pkg.PercentageTotalAmount%</td>
+                    <td>@pkg.RemainingMonthlyInstallments</td>
+                    <td>
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editPackageModal"
+                           onclick="fillPackageModal(@pkg.Id, '@PackageInfo.Name(pkg.PackageType)', @pkg.Cost.ToString(culture), @pkg.PercentageTotalAmount.ToString(culture), @pkg.RemainingMonthlyInstallments)">Editar</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a asp-controller="Package" asp-action="Delete" asp-route-id="@pkg.Id" class="beach-link-action">Eliminar</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -86,18 +58,32 @@
 
 @section Scripts {
     <script>
-        function fillPackageModal(id, name, price, deposit) {
+        function fillPackageModal(id, type, cost, prima, months) {
+            document.getElementById("editPackageModalLabel").textContent = "Editar paquete";
             document.getElementById("pkgId").value = id;
-            document.getElementById("pkgName").value = name;
-            document.getElementById("pkgPrice").value = "$" + Number(price).toFixed(2);
-            document.getElementById("pkgDeposit").value = deposit + "%";
+            document.getElementById("pkgType").value = type;
+            document.getElementById("pkgCost").value = cost;
+            document.getElementById("pkgPrima").value = prima;
+            document.getElementById("pkgMonths").value = months;
         }
 
         function clearPackageModal() {
+            document.getElementById("editPackageModalLabel").textContent = "Nuevo paquete";
             document.getElementById("pkgId").value = 0;
-            document.getElementById("pkgName").value = "";
-            document.getElementById("pkgPrice").value = "$000.00";
-            document.getElementById("pkgDeposit").value = "00%";
+            document.getElementById("pkgType").value = "Todo incluido";
+            setPackageDefaults();
+        }
+
+        function setPackageDefaults() {
+            const defaults = {
+                "Todo incluido": [450, 45, 24],
+                "Alimentación": [275, 35, 18],
+                "Hospedaje": [210, 15, 12]
+            };
+            const values = defaults[document.getElementById("pkgType").value];
+            document.getElementById("pkgCost").value = values[0];
+            document.getElementById("pkgPrima").value = values[1];
+            document.getElementById("pkgMonths").value = values[2];
         }
     </script>
 }
