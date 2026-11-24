@@ -1,0 +1,49 @@
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content beach-modal-content">
+            <div class="modal-body p-3 p-md-4">
+                <h2 class="h3 fw-bold mb-4" style="color: #0c2870;" id="editUserModalLabel">Editar usuario</h2>
+
+                <form asp-controller="User" asp-action="EditModal" method="post">
+                    <input type="hidden" name="returnAction" value="@ViewContext.RouteData.Values["action"]" />
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label fw-medium">Correo electrónico</label>
+                        <input type="email" class="form-control beach-pill-input" id="editEmail" name="Email" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label fw-medium">Nombre completo</label>
+                        <input type="text" class="form-control beach-pill-input" id="editFullName" name="FullName" required />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="editPhone" class="form-label fw-medium">Teléfono</label>
+                            <input type="text" class="form-control beach-pill-input" id="editPhone" name="PhoneNumber" pattern="[0-9]{8}" title="8 dígitos, sin guion" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editRole" class="form-label fw-medium">Rol</label>
+                            <select class="form-select beach-pill-input" id="editRole" name="Role">
+                                <option value="Customer">Cliente</option>
+                                <option value="Admin">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label fw-medium">Dirección</label>
+                        <input type="text" class="form-control beach-pill-input" id="editAddress" name="Address" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="editPassword" class="form-label fw-medium">Nueva contraseña (opcional)</label>
+                        <input type="password" class="form-control beach-pill-input" id="editPassword" name="Password" autocomplete="new-password" />
+                    </div>
+
+                    <button type="submit" class="btn beach-btn-amber w-100 py-2">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

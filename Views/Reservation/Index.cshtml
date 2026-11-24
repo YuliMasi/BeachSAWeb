@@ -1,0 +1,61 @@
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Mis reservaciones";
+}
+
+<section class="mt-4 mb-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <h1 class="page-title mb-0">Mis reservaciones</h1>
+        <a asp-action="Create" class="btn-beach w-auto">Nueva reservación</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <p class="empty-beach">Todavía no tiene reservaciones.</p>
+    }
+
+    <div class="d-flex flex-column gap-3">
+        @foreach (var item in Model)
+        {
+            <article class="reservation-row">
+                <div>
+                    <h2 class="reservation-title">@PackageInfo.Name(item.Package?.PackageType ?? $"Paquete #{item.PackageId}")</h2>
+                    <p class="reservation-dates">
+                        @item.CheckInDate.ToString("dd/MM/yyyy") – @item.CheckOutDate.ToString("dd/MM/yyyy")
+                        · @item.AccommodationDays noches · @item.GuestQuantity personas · @ReservationInfo.PaymentName(item.PaymentMethod)
+                    </p>
+                </div>
+
+                <div class="text-md-end">
+                    <span class="reservation-total-label">Total</span>
+                    <span class="reservation-total">$@((item.Invoice?.TotalUsd ?? 0).ToString("N2"))</span>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    @if (item.Invoice != null)
+                    {
+                        <a asp-controller="Invoice" asp-action="Details" asp-route-reservationId="@item.Id" class="btn-outline-beach btn-outline-beach-dark">Ver factura</a>
+                    }
+                    else
+                    {
+                        <span class="btn-outline-beach btn-outline-beach-muted">Factura pendiente</span>
+                    }
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="link-beach">Modificar</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="link-beach link-danger-beach">Cancelar</a>
+                </div>
+            </article>
+        }
+    </div>
+</section>

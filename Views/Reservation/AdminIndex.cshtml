@@ -1,0 +1,63 @@
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Reservation>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Reservaciones";
+}
+
+@section TopActions {
+    <form asp-action="Index" method="get" class="d-flex gap-2">
+        <select name="value" class="form-select beach-pill-input">
+            <option value="">Todas las formas de pago</option>
+            @foreach (var method in ReservationInfo.PaymentMethods(ViewData["value"]?.ToString()))
+            {
+                <option value="@method.Value" selected="@method.Selected">@method.Text</option>
+            }
+        </select>
+        <button type="submit" class="btn beach-btn-outline-navy">Filtrar</button>
+    </form>
+}
+
+<div class="table-responsive">
+    <table class="table beach-admin-table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Paquete</th>
+                <th>Fechas</th>
+                <th>Pago</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="7" class="text-muted">No hay reservaciones registradas.</td></tr>
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>R-@item.Id.ToString("D4")</td>
+                    <td>@(item.User?.FullName ?? $"Cliente #{item.UserId}")</td>
+                    <td>@PackageInfo.Name(item.Package?.PackageType ?? $"Paquete #{item.PackageId}")</td>
+                    <td>@item.CheckInDate.ToString("dd/MM/yyyy") – @item.CheckOutDate.ToString("dd/MM/yyyy")</td>
+                    <td>@ReservationInfo.PaymentName(item.PaymentMethod)</td>
+                    <td>$@((item.Invoice?.TotalUsd ?? 0).ToString("N2"))</td>
+                    <td>
+                        @if (item.Invoice != null)
+                        {
+                            <a asp-controller="Invoice" asp-action="Details" asp-route-reservationId="@item.Id" class="beach-link-action">Factura</a>
+                            <span class="mx-1 text-muted">·</span>
+                        }
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="beach-link-action">Editar</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="beach-link-action">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

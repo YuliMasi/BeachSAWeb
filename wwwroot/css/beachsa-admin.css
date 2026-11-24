@@ -1,0 +1,248 @@
+﻿:root {
+    --admin-navy: #0c2870;
+    --admin-navy-hover: rgba(255, 255, 255, 0.08);
+    --admin-amber: #f7a600;
+    --admin-amber-hover: #e09600;
+    --admin-bg: #ffffff;
+    --admin-border: #e5e9f0;
+    --admin-text: #1f293d;
+    --admin-muted: #6c7a93;
+}
+
+html,
+body.beach-admin-body,
+button,
+input,
+select,
+textarea,
+.btn,
+.form-control,
+.form-select,
+.table,
+.modal {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body.beach-admin-body {
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    margin: 0;
+}
+
+.beach-admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Barra lateral izquierda */
+.beach-sidebar {
+    width: 225px;
+    min-width: 225px;
+    background-color: var(--admin-navy);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem 1.25rem;
+}
+
+.beach-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1.75rem;
+}
+
+    .beach-sidebar-brand img {
+        height: 36px;
+        width: auto;
+    }
+
+.beach-sidebar-brand-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.1;
+}
+
+.beach-sidebar-brand-sub {
+    font-size: 0.7rem;
+    opacity: 0.85;
+}
+
+.beach-sidebar-section {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.75rem;
+}
+
+.beach-sidebar-link {
+    display: block;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    padding: 0.52rem 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+    .beach-sidebar-link:hover {
+        color: #ffffff;
+    }
+
+    .beach-sidebar-link.active {
+        color: var(--admin-amber);
+        font-weight: 600;
+    }
+
+.beach-sidebar-logout {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+}
+
+    .beach-sidebar-logout:hover {
+        color: #ffffff;
+    }
+
+/* Área principal derecha */
+.beach-admin-content {
+    flex: 1;
+    padding: 2.25rem 3rem;
+    background-color: var(--admin-bg);
+}
+
+.beach-admin-title {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.beach-btn-amber {
+    background-color: var(--admin-amber);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.5rem 1.35rem;
+    font-size: 0.9rem;
+}
+
+    .beach-btn-amber:hover,
+    .beach-btn-amber:focus {
+        background-color: var(--admin-amber-hover);
+        color: #ffffff;
+    }
+
+.beach-btn-outline-navy {
+    background-color: #ffffff;
+    border: 1.5px solid var(--admin-navy);
+    color: var(--admin-navy);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.48rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+    .beach-btn-outline-navy:hover {
+        background-color: var(--admin-navy);
+        color: #ffffff;
+    }
+
+/* KPIs del Dashboard */
+.beach-kpi-label {
+    font-size: 0.85rem;
+    color: var(--admin-navy);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.beach-kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+
+/* Tablas estilo Beach.SA */
+.beach-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .beach-admin-table thead th {
+        background-color: var(--admin-navy);
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 0.78rem 1rem;
+        border: none;
+    }
+
+        .beach-admin-table thead th:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .beach-admin-table thead th:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+    .beach-admin-table tbody td {
+        padding: 1rem 1rem;
+        border-bottom: 1px solid var(--admin-border);
+        font-size: 0.92rem;
+        color: #374151;
+        vertical-align: middle;
+    }
+
+.beach-link-action {
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+    .beach-link-action:hover {
+        color: var(--admin-navy);
+        text-decoration: underline;
+    }
+
+/* Modales / Pop ups */
+.beach-modal-content {
+    border: none;
+    border-radius: 22px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+
+.beach-pill-input {
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.95rem;
+}
+
+    .beach-pill-input:focus {
+        border-color: var(--admin-navy);
+        box-shadow: 0 0 0 0.2rem rgba(12, 40, 112, 0.12);
+    }
+
+@@media (max-width: 991.98px) {
+    .beach-admin-wrapper {
+        flex-direction: column;
+    }
+
+    .beach-sidebar {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .beach-admin-content {
+        padding: 1.5rem;
+    }
+}

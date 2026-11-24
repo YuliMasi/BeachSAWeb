@@ -1,0 +1,29 @@
+@model List<BeachSAWeb.Models.User>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Usuarios y roles";
+}
+
+@section TopActions {
+    <form asp-action="UsersAndRoles" method="get" class="d-flex gap-2">
+        <input type="text" name="name" value="@ViewData["name"]" class="form-control beach-pill-input" placeholder="Buscar por nombre" />
+        <button type="submit" class="btn beach-btn-outline-navy">Buscar</button>
+    </form>
+}
+
+<partial name="_UserTable" model="Model" />
+
+@section Scripts {
+    <script>
+        function openEditUserModal(link) {
+            const d = link.dataset;
+            document.getElementById("editEmail").value = d.email || "";
+            document.getElementById("editFullName").value = d.name || "";
+            document.getElementById("editPhone").value = d.phone || "";
+            document.getElementById("editAddress").value = d.address || "";
+            document.getElementById("editRole").value = d.role || "Customer";
+            document.getElementById("editPassword").value = "";
+        }
+    </script>
+}

@@ -1,0 +1,56 @@
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Reservation>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+
+    int totalReservations = ViewBag.TotalReservations ?? 0;
+    double totalSalesUsd = ViewBag.TotalSalesUsd ?? 0d;
+    int totalClients = ViewBag.TotalClients ?? 0;
+}
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="beach-kpi-label">Reservaciones</div>
+        <div class="beach-kpi-value">@totalReservations</div>
+    </div>
+    <div class="col-md-4">
+        <div class="beach-kpi-label">Ventas (USD)</div>
+        <div class="beach-kpi-value">$ @totalSalesUsd.ToString("N0")</div>
+    </div>
+    <div class="col-md-4">
+        <div class="beach-kpi-label">Clientes</div>
+        <div class="beach-kpi-value">@totalClients</div>
+    </div>
+</div>
+
+<h2 class="h5 fw-bold text-dark mb-3">Últimas reservaciones</h2>
+
+<div class="table-responsive">
+    <table class="table beach-admin-table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Paquete</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="4" class="text-muted">No hay reservaciones registradas.</td></tr>
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>R-@item.Id.ToString("D4")</td>
+                    <td>@(item.User?.FullName ?? $"Cliente #{item.UserId}")</td>
+                    <td>@PackageInfo.Name(item.Package?.PackageType ?? $"Paquete #{item.PackageId}")</td>
+                    <td>$@((item.Invoice?.TotalUsd ?? 0).ToString("N2"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

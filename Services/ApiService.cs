@@ -1,4 +1,4 @@
-﻿namespace BeachSAWeb.Services
+namespace BeachSAWeb.Services
 {
     public class ApiService
     {
@@ -6,7 +6,7 @@
         {
             HttpClient client = new HttpClient();
 
-            client.BaseAddress = new Uri("https://localhost:7001");
+            client.BaseAddress = new Uri("https://localhost:7047");
 
             return client;
         }
