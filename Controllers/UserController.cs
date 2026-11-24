@@ -11,18 +11,29 @@ using System.Security.Claims;
 
 namespace BeachSAWeb.Controllers
 {
+    /// <summary>
+    /// Controla el inicio de sesión, el registro y la administración de usuarios.
+    /// </summary>
     public class UserController : Controller
     {
         private readonly ApiService _apiService = null;
 
         private readonly HttpClient _httpClient = null;
 
+        /// <summary>
+        /// Inicializa el cliente HTTP que consume la API.
+        /// </summary>
         public UserController()
         {
             this._apiService = new ApiService();
             this._httpClient = this._apiService.ApiBeachStart();
         }
 
+        /// <summary>
+        /// Muestra el formulario de inicio de sesión.
+        /// </summary>
+        /// <param name="returnUrl">Dirección a la que se regresa al terminar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
@@ -30,6 +41,13 @@ namespace BeachSAWeb.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Valida las credenciales con la API, guarda el token y crea la cookie de autenticación.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <param name="remember">Indica si la sesión debe mantenerse al cerrar el navegador.</param>
+        /// <param name="returnUrl">Dirección a la que se regresa al terminar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind] User temp, bool remember, string returnUrl)
@@ -95,12 +113,21 @@ namespace BeachSAWeb.Controllers
             }
         }
 
+        /// <summary>
+        /// Muestra el formulario de registro.
+        /// </summary>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Registra un cliente nuevo en la API.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind] User temp)
@@ -143,6 +170,11 @@ namespace BeachSAWeb.Controllers
             }
         }
 
+        /// <summary>
+        /// Consulta en GoMeta el nombre y el tipo de una cédula.
+        /// </summary>
+        /// <param name="cedula">Número de cédula a consultar.</param>
+        /// <returns>Un JSON con el nombre y el tipo de cédula, o found en false.</returns>
         [HttpGet]
         public async Task<IActionResult> SearchCedula(string cedula)
         {
@@ -178,6 +210,11 @@ namespace BeachSAWeb.Controllers
             return Json(new { found = false });
         }
 
+        /// <summary>
+        /// Muestra el listado de clientes del panel de administración.
+        /// </summary>
+        /// <param name="name">Nombre o parte del nombre a buscar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Clients(string name)
@@ -193,6 +230,11 @@ namespace BeachSAWeb.Controllers
             return View(users.Where(u => u.Role != "Admin").OrderBy(u => u.FullName).ToList());
         }
 
+        /// <summary>
+        /// Muestra todos los usuarios y sus roles.
+        /// </summary>
+        /// <param name="name">Nombre o parte del nombre a buscar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> UsersAndRoles(string name)
@@ -208,6 +250,12 @@ namespace BeachSAWeb.Controllers
             return View(users.OrderBy(u => u.Role).ThenBy(u => u.FullName).ToList());
         }
 
+        /// <summary>
+        /// Guarda los cambios de un usuario desde la ventana del panel.
+        /// </summary>
+        /// <param name="temp">Datos enviados desde el formulario.</param>
+        /// <param name="returnAction">Acción del panel a la que se regresa al terminar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -246,6 +294,12 @@ namespace BeachSAWeb.Controllers
             return RedirectToAction(returnAction == "UsersAndRoles" ? "UsersAndRoles" : "Clients");
         }
 
+        /// <summary>
+        /// Elimina un usuario en la API.
+        /// </summary>
+        /// <param name="email">Correo del usuario a eliminar.</param>
+        /// <param name="returnAction">Acción del panel a la que se regresa al terminar.</param>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -270,6 +324,11 @@ namespace BeachSAWeb.Controllers
             return RedirectToAction(returnAction == "UsersAndRoles" ? "UsersAndRoles" : "Clients");
         }
 
+        /// <summary>
+        /// Consulta los usuarios en la API, filtrados por nombre si se indica.
+        /// </summary>
+        /// <param name="name">Nombre o parte del nombre a buscar.</param>
+        /// <returns>La lista de usuarios, o una lista vacía si la API falla.</returns>
         private async Task<List<User>> LoadUsers(string name)
         {
             HttpResponseMessage response = null;
@@ -293,6 +352,10 @@ namespace BeachSAWeb.Controllers
             return new List<User>();
         }
 
+        /// <summary>
+        /// Arma el encabezado de autorización con el token guardado en la sesión.
+        /// </summary>
+        /// <returns>El encabezado Bearer, o null si no hay token.</returns>
         private AuthenticationHeaderValue AuthorizationValue()
         {
             string varToken = HttpContext.Session.GetString("token");
@@ -307,6 +370,10 @@ namespace BeachSAWeb.Controllers
             return authentication;
         }
 
+        /// <summary>
+        /// Agrega el token de la sesión a las peticiones a la API.
+        /// </summary>
+        /// <returns>true si había token; false si la sesión expiró.</returns>
         private bool SetToken()
         {
             this._httpClient.DefaultRequestHeaders.Authorization = this.AuthorizationValue();
@@ -321,6 +388,12 @@ namespace BeachSAWeb.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Consulta en la API el perfil del usuario que inició sesión.
+        /// </summary>
+        /// <param name="email">Correo del usuario a eliminar.</param>
+        /// <param name="token">Token JWT devuelto por la API.</param>
+        /// <returns>El usuario sin contraseña, o null si no se pudo consultar.</returns>
         private async Task<User> SearchProfile(string email, string token)
         {
             try
@@ -342,6 +415,10 @@ namespace BeachSAWeb.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Cierra la sesión y elimina la cookie de autenticación.
+        /// </summary>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
