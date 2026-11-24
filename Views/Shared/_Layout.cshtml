@@ -38,10 +38,12 @@
                             <a class="nav-link nav-link-beach @(ctrl == "Package" ? "active" : "")" asp-controller="Package" asp-action="Index">Paquetes</a>
                         </li>
 
-                        @* Acceso temporal al panel de administración para pruebas *@
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-beach @(ctrl == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Index">Dashboard</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-beach @(ctrl == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Index">Administración</a>
+                            </li>
+                        }
 
                         @if (User.Identity.IsAuthenticated)
                         {
