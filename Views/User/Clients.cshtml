@@ -1,78 +1,28 @@
-﻿@model IEnumerable<BeachSAWeb.Models.User>
+@model List<BeachSAWeb.Models.User>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Clientes";
-    var clients = Model?.ToList() ?? new List<BeachSAWeb.Models.User>();
 }
 
-<div class="table-responsive">
-    <table class="table beach-admin-table">
-        <thead>
-            <tr>
-                <th>Cédula</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!clients.Any())
-            {
-                <tr>
-                    <td>2-3456-7890</td>
-                    <td>Nombre Apellido</td>
-                    <td>correo@gmail.com</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                           onclick="openEditUserModal(1, '2-3456-7890', 'Nombre Apellido', '8888-8888', 'correo@gmail.com')">Editar</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Eliminar</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3-4567-8901</td>
-                    <td>Nombre Apellido</td>
-                    <td>correo@gmail.com</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                           onclick="openEditUserModal(2, '3-4567-8901', 'Nombre Apellido', '8888-8888', 'correo@gmail.com')">Editar</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Eliminar</a>
-                    </td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var user in clients)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>
-                            <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                               onclick="openEditUserModal(@user.Id, '@user.Id', '@user.FullName', '@user.PhoneNumber', '@user.Email')">Editar</a>
-                            <span class="mx-1 text-muted">·</span>
-                            <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" class="beach-link-action">Eliminar</a>
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
+@section TopActions {
+    <form asp-action="Clients" method="get" class="d-flex gap-2">
+        <input type="text" name="name" value="@ViewData["name"]" class="form-control beach-pill-input" placeholder="Buscar por nombre" />
+        <button type="submit" class="btn beach-btn-outline-navy">Buscar</button>
+    </form>
+}
 
-@await Html.PartialAsync("_EditUserModal")
+<partial name="_UserTable" model="Model" />
 
 @section Scripts {
     <script>
-        function openEditUserModal(id, idNumber, fullName, phone, email) {
-            document.getElementById("editUserId").value = id;
-            document.getElementById("editIdNumber").value = idNumber || "";
-            document.getElementById("editFullName").value = fullName || "";
-            document.getElementById("editPhone").value = phone || "";
-            document.getElementById("editEmail").value = email || "";
+        function openEditUserModal(link) {
+            const d = link.dataset;
+            document.getElementById("editEmail").value = d.email || "";
+            document.getElementById("editFullName").value = d.name || "";
+            document.getElementById("editPhone").value = d.phone || "";
+            document.getElementById("editAddress").value = d.address || "";
+            document.getElementById("editRole").value = d.role || "Customer";
             document.getElementById("editPassword").value = "";
         }
     </script>
