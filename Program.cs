@@ -9,8 +9,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         config.LoginPath = "/User/Login";
         config.Cookie.HttpOnly = true;
         config.ExpireTimeSpan = TimeSpan.FromMinutes(8);
-        config.AccessDeniedPath = "/User/Login";
-        config.SlidingExpiration = true;
+        config.AccessDeniedPath = "/";
+        config.SlidingExpiration = false;
     }
     );
 

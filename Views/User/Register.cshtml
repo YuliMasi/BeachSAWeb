@@ -1,4 +1,4 @@
-@model BeachSAWeb.Models.User
+﻿@model BeachSAWeb.Models.User
 
 @{
     ViewData["Title"] = "Crear cuenta";
@@ -26,7 +26,7 @@
         <div class="mb-3">
             <label for="cedula" class="label-beach">Cédula</label>
             <div class="d-flex gap-2">
-                <input id="cedula" name="cedula" class="form-control input-beach" placeholder="123456789" maxlength="12" required />
+                <input id="cedula" name="Id" class="form-control input-beach" placeholder="123456789" inputmode="numeric" pattern="[0-9]{9,10}" title="Cédula sin guiones" maxlength="10" required />
                 <button type="button" id="btnConsultar" class="btn-outline-beach btn-outline-beach-dark">Consultar</button>
             </div>
             <small id="cedulaMsg" class="auth-hint"></small>
@@ -40,6 +40,11 @@
         <div class="mb-3">
             <label asp-for="PhoneNumber" class="label-beach">Teléfono</label>
             <input asp-for="PhoneNumber" type="tel" class="form-control input-beach" placeholder="88888888" pattern="[0-9]{8}" title="8 dígitos, sin guion" value="" required />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="label-beach">Dirección</label>
+            <input asp-for="Address" class="form-control input-beach" placeholder="Provincia, cantón, distrito" required />
         </div>
 
         <div class="mb-3">

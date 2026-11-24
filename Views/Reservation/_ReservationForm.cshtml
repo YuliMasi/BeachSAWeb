@@ -1,0 +1,202 @@
+@using BeachSAWeb.Services
+@model BeachSAWeb.Models.Reservation
+
+@{
+    bool isEdit = Model != null && Model.Id > 0;
+    var packages = ViewBag.Packages as List<BeachSAWeb.Models.Package> ?? new List<BeachSAWeb.Models.Package>();
+    double exchangeRate = ViewBag.ExchangeRate ?? 0d;
+    var culture = System.Globalization.CultureInfo.InvariantCulture;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<input type="hidden" asp-for="Id" />
+
+<div class="row g-4 align-items-start">
+    <div class="col-lg-8">
+        <div class="beach-panel">
+            <div class="mb-4">
+                <label asp-for="PackageId" class="beach-label">Paquete</label>
+                @if (isEdit)
+                {
+                    <input type="hidden" asp-for="PackageId" />
+                }
+                <select asp-for="PackageId" id="PackageSelect" class="form-select beach-input" disabled="@isEdit">
+                    @foreach (var pkg in packages)
+                    {
+                        <option value="@pkg.Id"
+                                data-price="@pkg.Cost.ToString(culture)"
+                                data-prima="@pkg.PercentageTotalAmount.ToString(culture)"
+                                data-months="@pkg.RemainingMonthlyInstallments"
+                                selected="@(pkg.Id == Model?.PackageId)">
+                            @PackageInfo.Name(pkg.PackageType) · $@pkg.Cost.ToString("N0") por persona / noche
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label asp-for="CheckInDate" class="beach-label">Fecha de entrada</label>
+                    <input asp-for="CheckInDate" type="date" id="CheckInDate" class="form-control beach-input" value="@Model?.CheckInDate.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="CheckOutDate" class="beach-label">Fecha de salida</label>
+                    <input asp-for="CheckOutDate" type="date" id="CheckOutDate" class="form-control beach-input" value="@Model?.CheckOutDate.ToString("yyyy-MM-dd")" required />
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label asp-for="GuestQuantity" class="beach-label">Personas</label>
+                    <input asp-for="GuestQuantity" type="number" min="1" id="GuestQuantity" class="form-control beach-input" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PaymentMethod" class="beach-label">Forma de pago</label>
+                    <select asp-for="PaymentMethod" id="PaymentMethod" class="form-select beach-input"
+                            asp-items="ReservationInfo.PaymentMethods(Model?.PaymentMethod)"></select>
+                </div>
+            </div>
+
+            <div class="row g-3" id="checkFields">
+                <div class="col-md-6">
+                    <label asp-for="CheckNumber" class="beach-label">Número de cheque</label>
+                    <input asp-for="CheckNumber" id="CheckNumber" class="form-control beach-input" placeholder="000123" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Bank" class="beach-label">Banco</label>
+                    <select asp-for="Bank" id="Bank" class="form-select beach-input">
+                        <option value="">Seleccione el banco</option>
+                        <option value="Banco Nacional">Banco Nacional</option>
+                        <option value="Banco de Costa Rica">Banco de Costa Rica</option>
+                        <option value="BAC Credomatic">BAC Credomatic</option>
+                        <option value="Banco Popular">Banco Popular</option>
+                        <option value="Scotiabank">Scotiabank</option>
+                        <option value="Davivienda">Davivienda</option>
+                        <option value="Promerica">Promerica</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="beach-subtext mt-4 mb-0">
+                Pago en efectivo: 10% de descuento de 3 a 6 noches, 15% de 7 a 9, 20% de 10 a 12 y 25% desde 13 noches.
+                Tarjeta y cheque no tienen descuento. Se aplica IVA del 13%.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="beach-panel">
+            <h2 class="summary-title">Resumen</h2>
+
+            <div class="summary-row"><span>Noches</span><span id="summaryNights">0</span></div>
+            <div class="summary-row"><span>Personas</span><span id="summaryGuests">0</span></div>
+            <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">$0.00</span></div>
+            <div class="summary-row"><span id="summaryDiscountLabel">Descuento 0%</span><span id="summaryDiscount">-$0.00</span></div>
+            <div class="summary-row"><span>IVA 13%</span><span id="summaryIva">$0.00</span></div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total">
+                <span class="summary-total-label">Total USD</span>
+                <span class="summary-total-amount" id="summaryTotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Total CRC</span>
+                <span id="summaryTotalCrc">@(exchangeRate > 0 ? "" : "CRC --")</span>
+            </div>
+            <div class="summary-row">
+                <span>Tipo de cambio BCCR</span>
+                <span>@(exchangeRate > 0 ? "₡" + exchangeRate.ToString("N2") : "--")</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row"><span id="summaryPrimaLabel">Prima</span><span id="summaryPrima">$0.00</span></div>
+            <div class="summary-row"><span id="summaryMonthsLabel">Mensualidades</span><span id="summaryMonthly">$0.00</span></div>
+
+            <button type="submit" class="btn-confirm-beach mt-3">@(isEdit ? "Guardar cambios" : "Confirmar")</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const exchangeRate = @exchangeRate.ToString(culture);
+        const pkgSelect = document.getElementById("PackageSelect");
+        const checkInEl = document.getElementById("CheckInDate");
+        const checkOutEl = document.getElementById("CheckOutDate");
+        const guestsEl = document.getElementById("GuestQuantity");
+        const paymentEl = document.getElementById("PaymentMethod");
+        const checkFields = document.getElementById("checkFields");
+        const checkNumberEl = document.getElementById("CheckNumber");
+        const bankEl = document.getElementById("Bank");
+
+        const money = (val) => "$" + Number(val || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const colones = (val) => "₡" + Number(val || 0).toLocaleString("es-CR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        function discountRate(nights, payment) {
+            if (payment !== "efectivo") return 0;
+            if (nights >= 13) return 0.25;
+            if (nights >= 10) return 0.20;
+            if (nights >= 7) return 0.15;
+            if (nights >= 3) return 0.10;
+            return 0;
+        }
+
+        function update() {
+            const option = pkgSelect.options[pkgSelect.selectedIndex];
+            const price = parseFloat(option?.dataset.price || "0");
+            const prima = parseFloat(option?.dataset.prima || "0");
+            const months = parseInt(option?.dataset.months || "0");
+            const guests = Math.max(parseInt(guestsEl.value || "0"), 0);
+            const payment = (paymentEl.value || "").toLowerCase();
+
+            if (checkInEl.value) {
+                checkOutEl.min = checkInEl.value;
+            }
+
+            let nights = 0;
+            if (checkInEl.value && checkOutEl.value) {
+                const d1 = new Date(checkInEl.value + "T00:00:00");
+                const d2 = new Date(checkOutEl.value + "T00:00:00");
+                nights = Math.max(Math.round((d2 - d1) / 86400000), 0);
+            }
+
+            const isCheck = payment === "cheque";
+            checkFields.style.display = isCheck ? "" : "none";
+            checkNumberEl.required = isCheck;
+            bankEl.required = isCheck;
+
+            const subtotal = price * nights * guests;
+            const rate = discountRate(nights, payment);
+            const discount = subtotal * rate;
+            const iva = (subtotal - discount) * 0.13;
+            const total = subtotal - discount + iva;
+            const primaAmount = total * prima / 100;
+            const monthly = months > 0 ? (total - primaAmount) / months : 0;
+
+            document.getElementById("summaryNights").textContent = nights;
+            document.getElementById("summaryGuests").textContent = guests;
+            document.getElementById("summarySubtotal").textContent = money(subtotal);
+            document.getElementById("summaryDiscountLabel").textContent = "Descuento " + Math.round(rate * 100) + "%";
+            document.getElementById("summaryDiscount").textContent = "-" + money(discount);
+            document.getElementById("summaryIva").textContent = money(iva);
+            document.getElementById("summaryTotal").textContent = money(total);
+            if (exchangeRate > 0) {
+                document.getElementById("summaryTotalCrc").textContent = colones(total * exchangeRate);
+            }
+            document.getElementById("summaryPrimaLabel").textContent = "Prima " + prima + "%";
+            document.getElementById("summaryPrima").textContent = money(primaAmount);
+            document.getElementById("summaryMonthsLabel").textContent = months + " mensualidades de";
+            document.getElementById("summaryMonthly").textContent = money(monthly);
+        }
+
+        [pkgSelect, checkInEl, checkOutEl, guestsEl, paymentEl].forEach(el => {
+            el.addEventListener("change", update);
+            el.addEventListener("input", update);
+        });
+
+        update();
+    })();
+</script>

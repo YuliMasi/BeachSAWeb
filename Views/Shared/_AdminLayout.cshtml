@@ -1,0 +1,85 @@
+﻿@{
+    string ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    string title = ViewData["Title"]?.ToString() ?? "Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title - Beach.SA Administrador</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/beachsa-admin.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="beach-admin-body">
+    <div class="beach-admin-wrapper">
+        <aside class="beach-sidebar">
+            <div>
+                <div class="beach-sidebar-brand">
+                    <img src="~/img/logo.png" alt="Beach.SA" />
+                </div>
+
+                <div class="beach-sidebar-section fs-6">ADMINISTRADOR</div>
+
+                <nav class="d-flex flex-column">
+                    <a class="beach-sidebar-link fw-light @(ctrl == "Admin" && act == "Index" ? "active" : "")"
+                       asp-controller="Admin" asp-action="Index">Dashboard</a>
+
+                    <a class="beach-sidebar-link fw-light @(ctrl == "Package" ? "active" : "")"
+                       asp-controller="Package" asp-action="Index">Paquetes</a>
+
+                    <a class="beach-sidebar-link fw-light @(ctrl == "User" && act == "Clients" ? "active" : "")"
+                       asp-controller="User" asp-action="Clients">Clientes</a>
+
+                    <a class="beach-sidebar-link fw-light @(ctrl == "Reservation" ? "active" : "")"
+                       asp-controller="Reservation" asp-action="Index">Reservaciones</a>
+
+                    <a class="beach-sidebar-link fw-light @(ctrl == "Invoice" ? "active" : "")"
+                       asp-controller="Invoice" asp-action="Index">Facturación</a>
+
+                    <a class="beach-sidebar-link fw-light @(ctrl == "User" && act == "UsersAndRoles" ? "active" : "")"
+                       asp-controller="User" asp-action="UsersAndRoles">Usuarios y roles</a>
+                </nav>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                <a class="beach-sidebar-link fw-light" asp-controller="Home" asp-action="Index">Ver sitio</a>
+                <a class="beach-sidebar-logout d-inline-block" asp-controller="User" asp-action="Logout">
+                    Cerrar sesión
+                </a>
+            </div>
+        </aside>
+
+        <main class="beach-admin-content">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <h1 class="beach-admin-title">@title</h1>
+                <div>
+                    @await RenderSectionAsync("TopActions", required: false)
+                </div>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success rounded-3 border-0 shadow-sm mb-4" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger rounded-3 border-0 shadow-sm mb-4" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

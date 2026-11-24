@@ -1,0 +1,23 @@
+@model BeachSAWeb.Models.Reservation
+
+@{
+    ViewData["Title"] = "Nueva reservación";
+}
+
+<div class="py-4">
+    <h1 class="beach-title h2 mb-4">Nueva reservación</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (ViewBag.Packages == null || ((List<BeachSAWeb.Models.Package>)ViewBag.Packages).Count == 0)
+    {
+        <div class="alert alert-warning rounded-4 border-0 shadow-sm mb-4" role="alert">No hay paquetes disponibles para reservar.</div>
+    }
+
+    <form asp-action="Create" method="post" id="reservationForm">
+        <partial name="_ReservationForm" model="Model" />
+    </form>
+</div>

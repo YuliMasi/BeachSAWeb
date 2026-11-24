@@ -1,0 +1,197 @@
+﻿:root {
+    --beach-navy: #143282;
+    --beach-navy-dark: #081c52;
+    --beach-amber: #f7a600;
+    --beach-amber-hover: #e09600;
+    --beach-bg: #f5f7fb;
+    --beach-border: #ced8ea;
+    --beach-muted: #7c8aa3;
+}
+
+html,
+body.beach-admin-body,
+button,
+input,
+select,
+textarea,
+.btn,
+.form-control,
+.form-select,
+.table,
+.modal {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: var(--beach-bg);
+}
+
+.beach-title,
+.beach-page-title {
+    color: var(--beach-navy);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.beach-panel,
+.beach-card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(20, 50, 130, 0.04);
+}
+
+.beach-panel {
+    padding: 2rem;
+}
+
+.beach-card {
+    border: 1px solid #e6ebf2;
+    overflow: hidden;
+}
+
+.beach-label {
+    color: #263248;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.beach-input {
+    border: 1px solid var(--beach-border);
+    border-radius: 999px;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.95rem;
+    color: #1f293d;
+    background-color: #ffffff;
+}
+
+    .beach-input::placeholder {
+        color: #b4bfd2;
+    }
+
+    .beach-input:focus {
+        border-color: var(--beach-navy);
+        box-shadow: 0 0 0 0.2rem rgba(20, 50, 130, 0.12);
+    }
+
+.summary-title {
+    color: var(--beach-navy);
+    font-weight: 700;
+    font-size: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #eef2f7;
+    margin-bottom: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.42rem 0;
+    font-size: 0.95rem;
+    color: #6c7a93;
+}
+
+.summary-divider {
+    border-top: 1px solid #eef2f7;
+    margin: 0.75rem 0;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    margin-bottom: 1.35rem;
+}
+
+.summary-total-label {
+    color: #6c7a93;
+    font-weight: 500;
+}
+
+.summary-total-amount {
+    color: var(--beach-navy);
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.btn-confirm-beach,
+.btn-beach-primary {
+    background-color: var(--beach-amber);
+    border: none;
+    border-radius: 999px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.btn-confirm-beach {
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.btn-beach-primary {
+    padding: 0.55rem 1.35rem;
+}
+
+    .btn-confirm-beach:hover,
+    .btn-confirm-beach:focus,
+    .btn-beach-primary:hover,
+    .btn-beach-primary:focus {
+        background-color: var(--beach-amber-hover);
+        color: #ffffff;
+    }
+
+.beach-table thead th {
+    background-color: #0c2870;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    padding: 0.95rem 1.1rem;
+    white-space: nowrap;
+}
+
+.beach-table tbody td {
+    padding: 1rem 1.1rem;
+    vertical-align: middle;
+    border-color: #e6ebf2;
+    color: #263248;
+    font-size: 0.92rem;
+}
+
+.beach-table tbody tr:hover {
+    background-color: #fafbfe;
+}
+
+.beach-subtext {
+    color: #6c7a93;
+    font-size: 0.82rem;
+}
+
+.beach-action-link {
+    color: #6c7a93;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+    .beach-action-link:hover {
+        color: #0c2870;
+        text-decoration: underline;
+    }
+
+.beach-action-delete:hover {
+    color: #c92a2a;
+}
+
+.beach-pill {
+    background-color: #eef2fa;
+    color: #0c2870;
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}

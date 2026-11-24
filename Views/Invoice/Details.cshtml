@@ -1,0 +1,58 @@
+@using BeachSAWeb.Services
+@model BeachSAWeb.Models.InvoiceDetail
+
+@{
+    ViewData["Title"] = $"Factura N° {Model.InvoiceNumber:D6}";
+    var d = Model.Details;
+    var r = Model.Reservation;
+    string backController = User.IsInRole("Admin") ? "Invoice" : "Reservation";
+}
+
+<section class="mt-4 mb-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="form-card mx-auto invoice-card">
+        <div class="invoice-header">
+            <h1 class="invoice-title">Factura N° @Model.InvoiceNumber.ToString("D6")</h1>
+            <span class="invoice-date">@Model.InvoiceDate.ToString("dd/MM/yyyy")</span>
+        </div>
+
+        <dl class="summary-list">
+            <div><dt>Cliente</dt><dd>@Model.Customer?.FullName</dd></div>
+            <div><dt>Cédula</dt><dd>@Model.Customer?.Id (@Model.Customer?.IdType)</dd></div>
+            <div><dt>Correo</dt><dd>@Model.Customer?.Email</dd></div>
+            <div><dt>Paquete</dt><dd>@PackageInfo.Name(r?.PackageType)</dd></div>
+            <div><dt>Fechas</dt><dd>@r?.CheckInDate.ToString("dd/MM/yyyy") – @r?.CheckOutDate.ToString("dd/MM/yyyy")</dd></div>
+            <div><dt>Noches</dt><dd>@r?.AccommodationDays</dd></div>
+            <div><dt>Personas</dt><dd>@r?.GuestQuantity</dd></div>
+            <div><dt>Forma de pago</dt><dd>@ReservationInfo.PaymentName(r?.PaymentMethod)</dd></div>
+            @if (!string.IsNullOrEmpty(r?.CheckNumber))
+            {
+                <div><dt>Cheque</dt><dd>N° @r.CheckNumber · @r.Bank</dd></div>
+            }
+            <div><dt>Subtotal</dt><dd>$@d.Subtotal.ToString("N2")</dd></div>
+            <div><dt>Descuento @((d.Discount * 100).ToString("N0"))%</dt><dd>-$@d.DiscountAmount.ToString("N2")</dd></div>
+            <div><dt>IVA @((d.Iva * 100).ToString("N0"))%</dt><dd>$@d.IvaAmount.ToString("N2")</dd></div>
+            <div><dt>Tipo de cambio BCCR</dt><dd>₡@d.ExchangeRate.ToString("N2")</dd></div>
+            <div class="summary-total"><dt>Total USD</dt><dd>$@d.TotalUsd.ToString("N2")</dd></div>
+            <div class="summary-total"><dt>Total CRC</dt><dd>₡@d.TotalColones.ToString("N2")</dd></div>
+        </dl>
+
+        <div class="d-flex flex-wrap gap-3 align-items-center">
+            <a asp-action="Pdf" asp-route-reservationId="@r?.Id" class="btn-beach w-auto">Descargar PDF</a>
+            <form asp-action="SendEmail" method="post" class="m-0">
+                <input type="hidden" name="reservationId" value="@r?.Id" />
+                <button type="submit" class="btn-outline-beach btn-outline-beach-dark">Reenviar por correo</button>
+            </form>
+            <a asp-controller="@backController" asp-action="Index" class="link-beach">Volver</a>
+        </div>
+    </div>
+</section>
