@@ -1,26 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
 
 namespace BeachSAWeb.Services
 {
-    public record DefaultPackageOption(int Id, string Name, decimal PricePerNight);
     public static class ReservationInfo
     {
-        public static List<DefaultPackageOption> DefaultPackages() => new()
-        {
-            new(1, PackageInfo.Name("Todo incluido"), 900m),
-            new(2, PackageInfo.Name("Alimentación"), 550m),
-            new(3, PackageInfo.Name("Hospedaje"), 420m)
-        };
-
         public static List<SelectListItem> PaymentMethods(string? selectedValue = null)
         {
-            var methods = new[]
-            {
-                "Efectivo",
-                "Tarjeta",
-                "SINPE Móvil",
-                "Transferencia"
-            };
+            string[] methods = { "Efectivo", "Tarjeta", "Cheque" };
 
             return methods.Select(m => new SelectListItem
             {
@@ -30,16 +17,40 @@ namespace BeachSAWeb.Services
             }).ToList();
         }
 
-        public static string NormalizePaymentMethod(string? method)
+        public static string PaymentName(string? method)
         {
-            return method?.Trim().ToLower() switch
+            switch (method?.Trim().ToLower())
             {
-                "cash" or "efectivo" => "Efectivo",
-                "card" or "tarjeta" => "Tarjeta",
-                "sinpe" or "sinpe móvil" or "sinpe movil" => "SINPE Móvil",
-                "transfer" or "transferencia" => "Transferencia",
-                _ => "Efectivo"
-            };
+                case "efectivo": return "Efectivo";
+                case "tarjeta": return "Tarjeta";
+                case "cheque": return "Cheque";
+                default: return method ?? "";
+            }
+        }
+
+        public static async Task<double> ExchangeRate()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://apis.gometa.org");
+                    client.Timeout = TimeSpan.FromSeconds(10);
+
+                    HttpResponseMessage http = await client.GetAsync("/tdc/tdc.json");
+
+                    if (http.IsSuccessStatusCode)
+                    {
+                        JObject data = JObject.Parse(await http.Content.ReadAsStringAsync());
+                        return (double?)data["venta"] ?? 0;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return 0;
         }
     }
 }
