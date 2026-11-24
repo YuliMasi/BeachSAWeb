@@ -6,7 +6,7 @@ namespace BeachSAWeb.Services
         {
             HttpClient client = new HttpClient();
 
-            client.BaseAddress = new Uri("https://localhost:7047");
+            client.BaseAddress = new Uri("http://beachsa.somee.com");
 
             return client;
         }
