@@ -8,18 +8,28 @@ using System.Net.Http.Headers;
 
 namespace BeachSAWeb.Controllers
 {
+    /// <summary>
+    /// Controla el panel de administración; solo lo usa el rol Admin.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ApiService _apiService = null;
         private readonly HttpClient _httpClient = null;
 
+        /// <summary>
+        /// Inicializa el cliente HTTP que consume la API.
+        /// </summary>
         public AdminController()
         {
             this._apiService = new ApiService();
             this._httpClient = this._apiService.ApiBeachStart();
         }
 
+        /// <summary>
+        /// Muestra el dashboard con el total de reservaciones, las ventas, los clientes y las últimas reservaciones.
+        /// </summary>
+        /// <returns>La vista, el archivo o la redirección que corresponde al resultado.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -56,6 +66,11 @@ namespace BeachSAWeb.Controllers
             return View(reservations.OrderByDescending(r => r.Id).Take(5).ToList());
         }
 
+        /// <summary>
+        /// Consulta un listado en la API y lo convierte al tipo indicado.
+        /// </summary>
+        /// <param name="url">Ruta del método de la API a consultar.</param>
+        /// <returns>La lista obtenida, o una lista vacía si la API falla.</returns>
         private async Task<List<T>> GetList<T>(string url)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(url);
@@ -69,6 +84,10 @@ namespace BeachSAWeb.Controllers
             return new List<T>();
         }
 
+        /// <summary>
+        /// Arma el encabezado de autorización con el token guardado en la sesión.
+        /// </summary>
+        /// <returns>El encabezado Bearer, o null si no hay token.</returns>
         private AuthenticationHeaderValue AuthorizationValue()
         {
             string varToken = HttpContext.Session.GetString("token");
@@ -83,6 +102,10 @@ namespace BeachSAWeb.Controllers
             return authentication;
         }
 
+        /// <summary>
+        /// Agrega el token de la sesión a las peticiones a la API.
+        /// </summary>
+        /// <returns>true si había token; false si la sesión expiró.</returns>
         private bool SetToken()
         {
             this._httpClient.DefaultRequestHeaders.Authorization = this.AuthorizationValue();
