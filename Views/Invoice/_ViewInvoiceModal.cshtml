@@ -1,49 +1,53 @@
-﻿<div class="modal fade" id="viewInvoiceModal" tabindex="-1" aria-labelledby="viewInvoiceModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewInvoiceModal" tabindex="-1" aria-labelledby="invNumber" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content beach-modal-content">
             <div class="modal-body p-3 p-md-4">
                 <div class="d-flex justify-content-between align-items-baseline pb-3 mb-3 border-bottom">
-                    <h2 class="h3 fw-bold mb-0" style="color: #0c2870;" id="invNumber">Factura N° 000123</h2>
-                    <span class="text-muted small" id="invDate">dd/mm/aaaa</span>
+                    <h2 class="h3 fw-bold mb-0" style="color: #0c2870;" id="invNumber">Factura</h2>
+                    <span class="text-muted small" id="invDate"></span>
                 </div>
 
                 <div class="d-flex justify-content-between py-2">
                     <span class="text-muted">Cliente</span>
-                    <span class="text-dark" id="invClient">Nombre Apellido</span>
+                    <span class="text-dark" id="invClient"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2">
                     <span class="text-muted">Paquete</span>
-                    <span class="text-dark" id="invPackage">Todo incluido</span>
+                    <span class="text-dark" id="invPackage"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2">
                     <span class="text-muted">Noches</span>
-                    <span class="text-dark" id="invNights">5</span>
+                    <span class="text-dark" id="invNights"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2">
                     <span class="text-muted">Forma de pago</span>
-                    <span class="text-dark" id="invPayment">Efectivo</span>
+                    <span class="text-dark" id="invPayment"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2">
-                    <span class="text-muted">Descuento 10%</span>
-                    <span class="text-muted" id="invDiscount">-$450.00</span>
+                    <span class="text-muted" id="invDiscountLabel">Descuento</span>
+                    <span class="text-muted" id="invDiscount"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2 pb-3 border-bottom">
                     <span class="text-muted">IVA 13%</span>
-                    <span class="text-muted" id="invIva">$526.50</span>
+                    <span class="text-muted" id="invIva"></span>
                 </div>
 
                 <div class="d-flex justify-content-between py-2 pt-3">
                     <span class="text-muted">Total USD</span>
-                    <span class="fw-bold" style="color: #0c2870;" id="invTotalUsd">$4,576.50</span>
+                    <span class="fw-bold" style="color: #0c2870;" id="invTotalUsd"></span>
                 </div>
                 <div class="d-flex justify-content-between py-2 mb-3">
                     <span class="text-muted">Total CRC</span>
-                    <span class="fw-bold" style="color: #0c2870;" id="invTotalCrc">CRC --</span>
+                    <span class="fw-bold" style="color: #0c2870;" id="invTotalCrc"></span>
                 </div>
 
                 <div class="d-flex flex-wrap gap-3">
-                    <button type="button" class="btn beach-btn-amber" onclick="window.print()">Descargar PDF</button>
-                    <button type="button" class="btn beach-btn-outline-navy" data-bs-dismiss="modal">Reenviar por correo</button>
+                    <a href="#" id="invPdfLink" class="btn beach-btn-amber">Descargar PDF</a>
+                    <form asp-controller="Invoice" asp-action="SendEmail" method="post" class="m-0">
+                        <input type="hidden" name="reservationId" id="invReservationId" value="0" />
+                        <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Invoice")" />
+                        <button type="submit" class="btn beach-btn-outline-navy">Reenviar por correo</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -1,9 +1,16 @@
-﻿@model IEnumerable<BeachSAWeb.Models.Invoice>
+@using BeachSAWeb.Services
+@model List<BeachSAWeb.Models.Invoice>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Facturación";
-    var invoices = Model?.ToList() ?? new List<BeachSAWeb.Models.Invoice>();
+}
+
+@section TopActions {
+    <form asp-action="Index" method="get" class="d-flex gap-2">
+        <input type="number" name="value" value="@ViewData["value"]" min="1" class="form-control beach-pill-input" placeholder="N° de factura" />
+        <button type="submit" class="btn beach-btn-outline-navy">Buscar</button>
+    </form>
 }
 
 <div class="table-responsive">
@@ -11,69 +18,55 @@
         <thead>
             <tr>
                 <th>N°</th>
+                <th>Fecha</th>
                 <th>Cliente</th>
+                <th>Paquete</th>
                 <th>Total USD</th>
                 <th>Total CRC</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @if (!invoices.Any())
+            @if (Model.Count == 0)
             {
-                <tr>
-                    <td>000123</td>
-                    <td>Nombre Apellido</td>
-                    <td>$4,576.50</td>
-                    <td>CRC --</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
-                           onclick="openInvoiceModal('000123', 'dd/mm/aaaa', 'Nombre Apellido', 'Todo incluido', 5, 'Efectivo', '-$450.00', '$526.50', '$4,576.50', 'CRC --')">Ver</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Reenviar PDF</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>000122</td>
-                    <td>Nombre Apellido</td>
-                    <td>$1,281.42</td>
-                    <td>CRC --</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
-                           onclick="openInvoiceModal('000122', 'dd/mm/aaaa', 'Nombre Apellido', 'Hospedaje', 3, 'Tarjeta', '$0.00', '$147.42', '$1,281.42', 'CRC --')">Ver</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Reenviar PDF</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>000121</td>
-                    <td>Nombre Apellido</td>
-                    <td>$2,113.10</td>
-                    <td>CRC --</td>
-                    <td>
-                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
-                           onclick="openInvoiceModal('000121', 'dd/mm/aaaa', 'Nombre Apellido', 'Alimentación', 4, 'Efectivo', '-$110.00', '$243.10', '$2,113.10', 'CRC --')">Ver</a>
-                        <span class="mx-1 text-muted">·</span>
-                        <a href="#" class="beach-link-action">Reenviar PDF</a>
-                    </td>
-                </tr>
+                <tr><td colspan="7" class="text-muted">No hay facturas registradas.</td></tr>
             }
-            else
+            @foreach (var inv in Model)
             {
-                @foreach (var inv in invoices)
-                {
-                    <tr>
-                        @* <td>@inv.Number.ToString("D6")</td>
-                        <td>@(inv.ClientName ?? "Nombre Apellido")</td>
-                        <td>$@inv.TotalUsd.ToString("N2")</td>
-                        <td>@(inv.TotalCrc.HasValue ? $"₡{inv.TotalCrc.Value:N2}" : "CRC --")</td>
-                        <td>
-                            <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
-                               onclick="openInvoiceModal('@inv.Number.ToString("D6")', '@inv.IssueDate.ToString("dd/MM/yyyy")', '@inv.ClientName', '@inv.PackageName', @inv.Nights, '@inv.PaymentMethod', '-$@inv.DiscountAmount.ToString("N2")', '$@inv.IvaAmount.ToString("N2")', '$@inv.TotalUsd.ToString("N2")', '@(inv.TotalCrc.HasValue ? $"₡{inv.TotalCrc.Value:N2}" : "CRC --")')">Ver</a>
-                            <span class="mx-1 text-muted">·</span>
-                            <a asp-controller="Invoice" asp-action="ResendPdf" asp-route-id="@inv.Id" class="beach-link-action">Reenviar PDF</a>
-                        </td> *@
-                    </tr>
-                }
+                string client = inv.User?.FullName ?? $"Cliente #{inv.UserId}";
+                string pkg = PackageInfo.Name(inv.Package?.PackageType ?? $"Paquete #{inv.PackageId}");
+                <tr>
+                    <td>@inv.InvoiceNumber.ToString("D6")</td>
+                    <td>@inv.InvoiceDate.ToString("dd/MM/yyyy")</td>
+                    <td>@client</td>
+                    <td>@pkg</td>
+                    <td>$@inv.TotalUsd.ToString("N2")</td>
+                    <td>₡@inv.TotalColones.ToString("N2")</td>
+                    <td class="text-nowrap">
+                        <a href="#" class="beach-link-action" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal"
+                           data-number="@inv.InvoiceNumber.ToString("D6")"
+                           data-date="@inv.InvoiceDate.ToString("dd/MM/yyyy")"
+                           data-client="@client"
+                           data-package="@pkg"
+                           data-nights="@(inv.Reservation?.AccommodationDays ?? 0)"
+                           data-payment="@ReservationInfo.PaymentName(inv.Reservation?.PaymentMethod)"
+                           data-discount-label="Descuento @((inv.Discount * 100).ToString("N0"))%"
+                           data-discount="-$@inv.DiscountAmount.ToString("N2")"
+                           data-iva="$@inv.IvaAmount.ToString("N2")"
+                           data-total-usd="$@inv.TotalUsd.ToString("N2")"
+                           data-total-crc="₡@inv.TotalColones.ToString("N2")"
+                           data-reservation="@inv.ReservationId"
+                           onclick="openInvoiceModal(this)">Ver</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <a asp-action="Pdf" asp-route-reservationId="@inv.ReservationId" class="beach-link-action">PDF</a>
+                        <span class="mx-1 text-muted">·</span>
+                        <form asp-action="SendEmail" method="post" class="d-inline">
+                            <input type="hidden" name="reservationId" value="@inv.ReservationId" />
+                            <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Invoice")" />
+                            <button type="submit" class="btn btn-link p-0 beach-link-action align-baseline">Reenviar PDF</button>
+                        </form>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -83,17 +76,21 @@
 
 @section Scripts {
     <script>
-        function openInvoiceModal(number, date, client, pkg, nights, payment, discount, iva, totalUsd, totalCrc) {
-            document.getElementById("invNumber").textContent = "Factura N° " + number;
-            document.getElementById("invDate").textContent = date;
-            document.getElementById("invClient").textContent = client;
-            document.getElementById("invPackage").textContent = pkg;
-            document.getElementById("invNights").textContent = nights;
-            document.getElementById("invPayment").textContent = payment;
-            document.getElementById("invDiscount").textContent = discount;
-            document.getElementById("invIva").textContent = iva;
-            document.getElementById("invTotalUsd").textContent = totalUsd;
-            document.getElementById("invTotalCrc").textContent = totalCrc;
+        function openInvoiceModal(link) {
+            const d = link.dataset;
+            document.getElementById("invNumber").textContent = "Factura N° " + d.number;
+            document.getElementById("invDate").textContent = d.date;
+            document.getElementById("invClient").textContent = d.client;
+            document.getElementById("invPackage").textContent = d.package;
+            document.getElementById("invNights").textContent = d.nights;
+            document.getElementById("invPayment").textContent = d.payment;
+            document.getElementById("invDiscountLabel").textContent = d.discountLabel;
+            document.getElementById("invDiscount").textContent = d.discount;
+            document.getElementById("invIva").textContent = d.iva;
+            document.getElementById("invTotalUsd").textContent = d.totalUsd;
+            document.getElementById("invTotalCrc").textContent = d.totalCrc;
+            document.getElementById("invPdfLink").href = "@Url.Action("Pdf", "Invoice")?reservationId=" + d.reservation;
+            document.getElementById("invReservationId").value = d.reservation;
         }
     </script>
 }
